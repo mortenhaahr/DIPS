@@ -61,11 +61,26 @@ See (b)
 # 4. Bully Election
 
 ### (a) Derive the message complexity
+We are looking at worst case and assuming all nodes are online.
 
-(N-1) + (N-2) ... (N-(N-1)) = N*N/2 bc. (1 + (N-1)) = N. This happens N/2 times.
+**Election messages:**
+
+$(N-1) + (N-2) ... (N-(N-1)) = \textbf{(N-1)*N/2}$ since $(1 + (N-1))$ = N. This happens N/2 times.
 
 This equals: O(N*N/2) Which in big O is: O(N^2)
+
+**Acknowledgement messages:**
+Same as election
+
+**Leader broadcast:**
+
+Always N-1.
+
+**Total:**
+
+Combined this becomes: $N^2 - 1$
 
 ### (b) Implement the algorithm (preferably in Python) and verify it works
 
 ### (c) Use the implementation to demonstrate the message complexity in practice
+We counted how many messages were received of each category.
