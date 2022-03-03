@@ -4,14 +4,16 @@ import queue
 import threading
 import time
 import random
+import bully_election_classes
+
 # from mpi4py import MPI
 
 #node_ids = range(MPI.COMM_WORLD.size)
 #highest_id = max(node_ids)
 #comm = MPI.COMM_WORLD
 
-seed = 42
-ID_array = ProcessID()
+
+ID_array = bully_election_classes.ProcessID()
 election_timer = None
 
 recv_queue = []
@@ -21,54 +23,14 @@ broadcast_count = 0
 ok_count = 0
 total_count = 0
 
-class Message():
-    def __init__(self, sender, type, data = None):
-        self.sender = sender
-        self.type = type
-        self.data = data
-        
-
-    def __repr__(self):
-        return str({"Sender": self.sender, "type": self.type, "data": self.data})
-
-class Type(Enum):
-    ELECTION = 0
-    OK = 1
-    COORDINATOR = 2
-    MSG_COUNT = 3
-
 def Construct_msg(sender, type, data = None):
-    return Message(sender=sender,type=type,data=data)
-
-class myTimer():
-    def __init__(self,seconds,func):
-        self.T = threading.Timer(seconds, func)
-        self.T.start()
-
-    def kill(self):
-        self.T.cancel()
-
-class ProcessID():
-    def __init__(self):
-        random.seed(seed)
-        #self.ID_array = random.sample(range(1,comm.size+20),comm.size)
-        self.ID_array = random.sample(range(1,8+20),8)
-
-    def getID(self, rank):
-        return self.ID_array[rank]
-
-    def getLowestID(self):
-        return min(self.ID_array)
-
-    def __repr__(self):
-        return str({"ID_array": self.ID_array})
-    
+    return bully_election_classes.Message(sender=sender,type=type,data=data)
 
 def Coordinate(comm): 
     global broadcast_count
     for rank in range(comm.size):
         if rank != comm.rank:
-            comm.send(Construct_msg(comm.rank, Type.COORDINATOR,ID_array.getID(comm.rank)), rank)
+            comm.send(Construct_msg(comm.rank, bully_election_classes.Type.COORDINATOR,ID_array.getID(comm.rank)), rank)
             broadcast_count += 1
     print(f"Done broadcasting leader on node {comm.rank}.")
 
@@ -76,28 +38,28 @@ def HoldElection():
     global election_count
     my_id = ID_array.getID(comm.rank)
     global election_timer
-    election_timer = myTimer(1,Coordinate)
+    election_timer = bully_election_classes.myTimer(1,Coordinate)
 
     for other_rank, id in enumerate(ID_array.ID_array):
         if id > my_id:
-            comm.send(Construct_msg(comm.rank, Type.ELECTION), other_rank)
+            comm.send(Construct_msg(comm.rank, bully_election_classes.Type.ELECTION), other_rank)
             election_count += 1
 
 def Recieve_Handle(Message):
-    if Massage.type == Type.Election:
+    if bully_election_classes.Massage.type == bully_election_classes.Type.Election:
         global ok_count
-        comm.send(Construct_msg(comm.rank, Type.OK),Message.sender)
+        comm.send(Construct_msg(comm.rank, bully_election_classes.Type.OK),Message.sender)
         ok_count += 1
         HoldElection()
-    elif Message.type == Type.OK:
+    elif Message.type == bully_election_classes.Type.OK:
         global election_timer
         election_timer.kill()
-    elif Message.type == Type.COORDINATOR:
+    elif Message.type == bully_election_classes.Type.COORDINATOR:
         print(f"Node: {ID_array.getID(comm.rank)} acknowledge {ID_array.getID(Message.sender)} as leader")
         global election_count,broadcast_count, ok_count
         msg_count = election_count + broadcast_count + ok_count
-        comm.send(Construct_msg(comm.rank,Type.MSG_COUNT,msg_count),Message.sender)
-    elif Message.type == Type.MSG_COUNT:
+        comm.send(Construct_msg(comm.rank,bully_election_classes.Type.MSG_COUNT,msg_count),Message.sender)
+    elif Message.type == bully_election_classes.Type.MSG_COUNT:
         global total_count
         print(f"Node: {ID_array.getID(comm.rank)} counted {ID_array.getID(Message.data)} from {ID_array.getID(Message.sender)}")
         total_count += Message.data
