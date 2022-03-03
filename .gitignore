@@ -2,3 +2,4 @@
 .vscode
 .idea
 cmake-build-debug
+prj1/__pycache__/bully_election.cpython-39.pyc
