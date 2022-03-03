@@ -29,10 +29,10 @@ class myTimer():
         self.T.cancel()
 
 class ProcessID():
-    def __init__(self):
+    def __init__(self, comm):
         random.seed(seed)
-        #self.ID_array = random.sample(range(1,comm.size+20),comm.size)
-        self.ID_array = random.sample(range(1,8+20),8)
+        self.ID_array = random.sample(range(1,comm.size+20),comm.size)
+        #self.ID_array = random.sample(range(1,8+20),8)
 
     def getID(self, rank):
         return self.ID_array[rank]
