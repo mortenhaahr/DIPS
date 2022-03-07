@@ -12,15 +12,15 @@ class Message():
         
 
     def __repr__(self):
-        return str({"Sender": self.sender, "type": self.type, "data": self.data})
+        return str({"Sender": self.sender, "type": self.type.name, "data": self.data})
 
-class Type(Enum):
+class MsgType(Enum):
     ELECTION = 0
     OK = 1
     COORDINATOR = 2
     MSG_COUNT = 3
 
-class myTimer():
+class Timer():
     def __init__(self,seconds,func):
         self.T = threading.Timer(seconds, func)
         self.T.start()
@@ -28,16 +28,15 @@ class myTimer():
     def kill(self):
         self.T.cancel()
 
-class ProcessID():
+class SystemIDs():
     def __init__(self, comm):
         random.seed(seed)
         self.ID_array = random.sample(range(1,comm.size+20),comm.size)
-        #self.ID_array = random.sample(range(1,8+20),8)
 
-    def getID(self, rank):
+    def get_id(self, rank):
         return self.ID_array[rank]
 
-    def getLowestID(self):
+    def get_lowest_id(self):
         return min(self.ID_array)
 
     def __repr__(self):
