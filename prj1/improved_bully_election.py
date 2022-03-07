@@ -44,7 +44,7 @@ def hold_election():
             election_count += 1
 
 
-def receive_handle(Message):
+def dispatch_handle(Message):
     global election_count, broadcast_count, ok_count, total_count, max_id
     if Message.type == MsgType.ELECTION:
         comm.send(construct_msg(comm.rank, MsgType.OK,
@@ -84,7 +84,7 @@ def dispatch():
             continue
 
         print(f"Node: {system_ids.get_id(comm.rank)} got {next}")
-        receive_handle(next)
+        dispatch_handle(next)
 
 
 def main():
