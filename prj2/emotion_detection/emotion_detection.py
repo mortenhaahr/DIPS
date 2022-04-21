@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """ NOTE: To run this script out of debug mode run: `python -O emotion_detection.py`. (-O stands for optimize)"""
+import json
 import cv2
 import pandas as pd
 import datetime
+from time import sleep
 
-if __debug__:
-    import face_recognition
+import face_recognition
 from deepface import DeepFace
+from paho.mqtt.client import Client as MQTTClient, MQTTv311
 
 
 def get_frame(video_capture):
@@ -23,7 +25,6 @@ def draw_debug_info(frame):
     # Find all the faces in the current frame of video
     # NOTE: This is computationally very expensive. Turn off in production
     face_locations = face_recognition.face_locations(rgb_frame)
-
     # Display the results
     for top, right, bottom, left in face_locations:
         # Draw a box around the face
@@ -59,23 +60,58 @@ def get_emotions(video_capture, n_samples, time_cap_seconds=10):
             return emotions
 
 
+def detect_face(frame) -> bool:
+    rgb_frame = frame[:, :, ::-1]
+    face_locations = face_recognition.face_locations(rgb_frame)
+    return bool(face_locations)
+
+
+class PublisherMQTTClient(MQTTClient):
+    """MQTT client with a fixed publisher topic"""
+
+    # fmt: off
+    def __init__(self, publisher_topic, client_id="", clean_session=None, userdata=None, protocol=MQTTv311, transport="tcp", reconnect_on_failure=True):
+        self.publisher_topic = publisher_topic
+        super().__init__(client_id, clean_session, userdata, protocol, transport, reconnect_on_failure)
+    # fmt: on
+
+    def publish(self, payload=None, qos=0, retain=False, properties=None):
+        return super().publish(self.publisher_topic, payload, qos, retain, properties)
+
+
+def setup_mqtt_client():
+    """Function to setup the MQTT function"""
+    TOPIC = "smart_home/emotion_cam"
+    client = PublisherMQTTClient(publisher_topic=TOPIC, client_id="emotion_cam")
+    client.connect("localhost", 1883)
+    return client
+
+
 def main():
-    # Get a reference to webcam
     video_capture = cv2.VideoCapture("/dev/video0")
     if __debug__:
         n_samples = 10
     else:
-        n_samples = 10
-
-    try:
-        emotions = get_emotions(video_capture, n_samples)
-        emotions = map(lambda e: e["emotion"], emotions)
-        emotions = pd.DataFrame(emotions)
-        if __debug__ or True:  # Don't print in final version
-            print(emotions)
-        emotions = emotions.mean(axis=0)
-    except TimeoutError as e:
-        print(e)
+        n_samples = 30
+    mqtt_client = setup_mqtt_client()
+    while True:
+        frame = get_frame(video_capture)
+        face_detected = detect_face(frame)
+        if __debug__:
+            print(f"face: {face_detected}")
+        if face_detected:
+            try:
+                emotions = get_emotions(video_capture, n_samples)
+                emotions = map(lambda e: e["emotion"], emotions)
+                emotions = pd.DataFrame(emotions)
+                emotions = emotions.mean(axis=0)
+                if __debug__ or True:
+                    print(emotions)
+                mqtt_client.publish(json.dumps(emotions.to_dict()))
+                sleep(10)  # Sleep long if face was detected to avoid duplicates
+            except TimeoutError as e:
+                print(e)
+        sleep(0.1)
 
     # Release handle to the webcam
     video_capture.release()
