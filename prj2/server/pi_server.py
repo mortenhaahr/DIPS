@@ -20,7 +20,7 @@ def main():
 	    level=logging.INFO, format="%(asctime)s : %(levelname)s:  %(message)s"
 	)
 	client = MQTTCallbackClient(client_id="Kubuntu_sub", userdata="DumDumReceiver")
-	client.connect("localhost", 1883)  # Mortens laptop IP
+	client.connect("192.168.201.239", 1883)  # Mortens laptop IP
 	client.subscribe("pi_server/#")
 	client.subscribe("pi_server/mood_detector", callback=mood_callback)
 	
