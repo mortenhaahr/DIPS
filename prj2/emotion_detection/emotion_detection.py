@@ -2,6 +2,7 @@
 """ NOTE: To run this script out of debug mode run: `python -O emotion_detection.py`. (-O stands for optimize)"""
 import cv2
 import pandas as pd
+import datetime
 
 if __debug__:
     import face_recognition
@@ -33,15 +34,18 @@ def draw_debug_info(frame):
     cv2.waitKey(1)  # Show img for at least 1 sec
 
 
-def get_emotions(video_capture, n_samples):
-    """Blocking function for getting `n_samples` successful samples in a row.
+def get_emotions(video_capture, n_samples, time_cap_seconds=10):
+    """Blocking function for getting `n_samples` successful samples in a row. Throws timeout error if and error occurs after `time_cap_seconds`.
 
     The reasoning behind starting over on an unsuccessful row:
         If we get an unsuccessful row it is most likely due to the target not being in correct position or moving.
         So better to start over than to try and work with mixed/noisy data.
     """
+    time_cap = datetime.datetime.now() + datetime.timedelta(seconds=time_cap_seconds)
     while True:
         emotions = []
+        if datetime.datetime.now() > time_cap:
+            raise TimeoutError("Tried getting mood for too long")
         for _ in range(n_samples):
             frame = get_frame(video_capture)
             if __debug__:
@@ -61,20 +65,21 @@ def main():
     if __debug__:
         n_samples = 10
     else:
-        n_samples = 30
+        n_samples = 10
 
-    emotions = get_emotions(video_capture, n_samples)
-    emotions = map(lambda e: e["emotion"], emotions)
-    emotions = pd.DataFrame(emotions)
-    if __debug__ or True:  # Don't print in final version
-        print(emotions)
-    emotions = emotions.mean(axis=0)
+    try:
+        emotions = get_emotions(video_capture, n_samples)
+        emotions = map(lambda e: e["emotion"], emotions)
+        emotions = pd.DataFrame(emotions)
+        if __debug__ or True:  # Don't print in final version
+            print(emotions)
+        emotions = emotions.mean(axis=0)
+    except TimeoutError as e:
+        print(e)
 
     # Release handle to the webcam
     video_capture.release()
     cv2.destroyAllWindows()
-    if __debug__ or True:  # Don't print in final version
-        print(emotions)
 
 
 if __name__ == "__main__":
