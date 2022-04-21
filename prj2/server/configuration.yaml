@@ -1,0 +1,14 @@
+homeassistant: false
+permit_join: false
+mqtt:
+  base_topic: mortens_sick_bee
+  server: mqtt://localhost
+serial:
+  port: /dev/ttyACM0
+devices:
+  '0x00158d00057b4caf':
+    friendly_name: pir_sensor
+    illuminance_precision: 1
+    temperature_precision: 1
+  '0x680ae2fffe72463b':
+    friendly_name: smart_plug
