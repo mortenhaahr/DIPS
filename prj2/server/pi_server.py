@@ -2,12 +2,11 @@
 import logging
 import threading
 
-from sqlalchemy import null
 from mqtt_callback_client import MQTTCallbackClient
 from colorsys import hsv_to_rgb
 
 
-client = null
+client = None
 
 def mood_callback(payload):
 	global client
