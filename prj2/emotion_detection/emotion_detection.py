@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """ NOTE: To run this script out of debug mode run: `python -O emotion_detection.py`. (-O stands for optimize)"""
 import json
+import socket
 import cv2
 import pandas as pd
 import datetime
@@ -81,9 +82,10 @@ class PublisherMQTTClient(MQTTClient):
 
 def setup_mqtt_client():
     """Function to setup the MQTT function"""
-    TOPIC = "smart_home/emotion_cam"
+    TOPIC = "pi_server/emotion"
     client = PublisherMQTTClient(publisher_topic=TOPIC, client_id="emotion_cam")
-    client.connect("localhost", 1883)
+    broker_ip = socket.gethostbyname("rpi-server.local")
+    client.connect(broker_ip, 1883)
     return client
 
 
@@ -102,7 +104,7 @@ def main():
         if face_detected:
             try:
                 emotions = get_emotions(video_capture, n_samples)
-                emotions = map(lambda e: e["emotion"], emotions)
+                emotions = map(lambda e: e["emotion"], emotions) # Get the emotion entries
                 emotions = pd.DataFrame(emotions)
                 emotions = emotions.mean(axis=0)
                 if __debug__ or True:
