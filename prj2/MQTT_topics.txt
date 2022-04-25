@@ -1,0 +1,27 @@
+Emotion detector -> Server:		
+	Topic = "emotion": {
+		"angry": 	float
+		"happy": 	float
+		"sad":		float
+		"neutral":	float
+	}
+	
+Server -> LED:
+	Topic = "color": {
+		"rgb": "rrr,ggg,bbb"
+	}
+	Topic = "brightness": [0...254]
+	
+Room sensor(X) -> Server:
+	Topic = "occupancy": bool
+	
+Server -> Audio controller:
+	Topic = "play": {
+		"emotion": string
+		"room": number
+	}
+	
+Audio controller -> Server:
+	Topic = "voice": {
+		"command": string
+	}
