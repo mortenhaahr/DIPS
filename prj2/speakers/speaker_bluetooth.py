@@ -3,6 +3,8 @@ import os
 
 import pygame
 
+def initMusic():
+    pygame.mixer.init()
 #play sound
 def loadMusic(file):
     pygame.mixer.music.load(file)
@@ -19,9 +21,9 @@ def playMusic(emotion):
     print('Playing sound \n')
     pygame.mixer.music.play(loops=-1)    
 
-def initMusic():
-    pygame.mixer.init()
 
+
+initMusic()
 playMusic("happy")
 
 
