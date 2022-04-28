@@ -2,7 +2,7 @@
 import logging
 import json
 
-from .topics import *
+from topics import *
 import threading
 from datetime import datetime
 import geocoder

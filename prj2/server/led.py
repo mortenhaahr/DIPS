@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from .topics import *
+from topics import *
 from datetime import datetime
 import blinkt
 from colorsys import hsv_to_rgb

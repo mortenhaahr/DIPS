@@ -5,8 +5,8 @@ from mqtt_callback_client import MQTTCallbackClient
 
 import socket
 
-from .led import setup_leds
-from .contexts import init_contexts
+from contexts import init_contexts
+from led import setup_leds
 
 
 def main():
@@ -22,7 +22,7 @@ def main():
 	#client.subscribe(base_topic + "#") 
 
 	init_contexts(client)
-	setup_leds()
+	setup_leds(client)
 
 	client.loop_forever()
 
