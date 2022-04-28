@@ -41,6 +41,11 @@ def update_emotion_callback(payload, client):
 		else:
 			raise ValueError
 
+		to_send = {
+			"emotion": emotion
+		}
+
+		client.publish(emotion_context, json.dumps(to_send))
 
 		new_status = {"on": True}
 		voice_context_callback(new_status, client)

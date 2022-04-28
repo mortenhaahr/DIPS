@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import paho.mqtt.client as mqtt
-from topics import *
+from .topics import *
 
 class Led():
     def __init__(self, client, topic):
