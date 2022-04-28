@@ -98,8 +98,8 @@ def voice_context_callback(payload, client):
 def init_contexts(client):
 	client.subscribe(voice_topic, 		callback=lambda payload: voice_context_callback(payload, client))
 	client.subscribe(emotion_topic, 	callback=lambda payload: update_emotion_callback(payload, client))
-	client.subscribe(pir_topic + room1, callback=lambda payload: update_room_context(payload, client, 1))
-	client.subscribe(pir_topic + room2, callback=lambda payload: update_room_context(payload, client, 2))
+	client.subscribe(pir_topic + room1, callback=lambda payload: update_room_context(payload, client, "1"))
+	client.subscribe(pir_topic + room2, callback=lambda payload: update_room_context(payload, client, "2"))
 
 	time_context_updater(client)
 	position_context_updater(client)
