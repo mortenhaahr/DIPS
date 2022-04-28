@@ -56,6 +56,7 @@ class LedBlinkt():
 
     def off(self):
         blinkt.clear()
+        blinkt.show()
 
 
 led1 = None
