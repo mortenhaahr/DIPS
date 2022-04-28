@@ -70,11 +70,11 @@ def led_new_emotion(payload):
     led2.update_emotion(payload['emotion'])
 
 
-def led_room_controll(payload, room_nbr):
+def led_room_control(payload, room_nbr):
     global led1
     global led2
 
-    logging.info(f"led_room_controll: room_nbr = {room_nbr}")
+    logging.info(f"led_room_control: room_nbr = {room_nbr}")
 
     if payload["occupied"]:
         if room_nbr == 1:
@@ -128,7 +128,7 @@ def setup_leds(client):
     led2 = LedStrip(client, led_topic + room2)
 
     client.subscribe(datetime_context,      callback=led_brightness_control)
-    client.subscribe(room_context + "1",    callback=lambda payload: led_room_controll(payload, 1))
-    client.subscribe(room_context + "2",    callback=lambda payload: led_room_controll(payload, 2))
+    client.subscribe(room_context + "1",    callback=lambda payload: led_room_control(payload, 1))
+    client.subscribe(room_context + "2",    callback=lambda payload: led_room_control(payload, 2))
     client.subscribe(emotion_context,       callback=led_new_emotion)
     client.subscribe(voice_context,         callback=lambda payload: led_voice_control(payload))
