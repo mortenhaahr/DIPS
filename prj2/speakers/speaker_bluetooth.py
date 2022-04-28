@@ -3,14 +3,28 @@ import os
 
 import pygame
 
-pygame.mixer.init()
-
 #play sound
-file = 'Tammy-Stan-Devereaux.mp3'
-pygame.mixer.music.load(file)
+def loadMusic(file):
+    pygame.mixer.music.load(file)
 
-print('Playing sound \n')
-pygame.mixer.music.play(loops=-1)
+def playMusic(emotion):
+    sad_file = 'Tammy-Stan-Devereaux.mp3'
+    happy_file = 'Pharrell-Williams-Happy-f7.mp3'
+
+    if emotion == "sad":
+        loadMusic(sad_file)
+    elif emotion == "happy":
+        loadMusic(happy_file)
+
+    print('Playing sound \n')
+    pygame.mixer.music.play(loops=-1)    
+
+def initMusic():
+    pygame.mixer.init()
+
+playMusic("happy")
+
+
 
 print("Volume is: ", pygame.mixer.music.get_volume(),"\n")
 
