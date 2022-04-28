@@ -4,6 +4,7 @@ from topics import *
 from datetime import datetime
 import blinkt
 from colorsys import hsv_to_rgb
+import logging
 
 class LedStrip():
     def __init__(self, client, topic):
