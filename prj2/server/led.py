@@ -39,7 +39,7 @@ class LedBlinkt():
         self.off()
 
         for i in range(8):
-            r, g, b = [int(c * 255) for c in hsv_to_rgb(self.hue, 1.0, 1.0)]
+            r, g, b = [int(c * 255) for c in hsv_to_rgb(self.hue/360, 1.0, 1.0)]
             blinkt.set_pixel(i, r, g, b)
 
         blinkt.show()
