@@ -1,10 +1,5 @@
 Emotion detector -> Server:		
-	Topic = "emotion": {
-		"angry": 	float
-		"happy": 	float
-		"sad":		float
-		"neutral":	float
-	}
+	
 	
 Server -> LED:
 	Topic = "color": {
@@ -25,3 +20,25 @@ Audio controller -> Server:
 	Topic = "voice": {
 		"command": string
 	}
+	
+Context model:
+	Context: 
+	
+	Topic = "emotion": string	
+	Topic = "datetime": string
+	
+	Topic = "position":
+		string
+	
+	Topic = "room1": {
+		"occupied": bool
+	}
+	
+	Topic = "room2": {
+		"occupied": bool
+	}
+	
+	Topic = "voice": {
+		"on": bool
+	}
+	

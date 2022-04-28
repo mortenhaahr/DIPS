@@ -7,3 +7,7 @@ voice_topic 	= base_topic + "voice"
 led_topic 		= base_topic + "led"
 audio_topic 	= base_topic + "audio"
 
+context_topic  = base_topic + "context/"
+
+datetime_topic = context_topic + "datetime"
+
