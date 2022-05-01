@@ -1,6 +1,5 @@
 import os
 import logging
-from matplotlib.pyplot import disconnect
 
 import paho.mqtt.client as mqtt
 from mqtt_callback_client import MQTTCallbackClient
