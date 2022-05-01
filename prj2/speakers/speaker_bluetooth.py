@@ -7,7 +7,7 @@ from mqtt_callback_client import MQTTCallbackClient
 import pygame
 import socket
 
-import bluepy.btle
+from bluepy.btle import Peripheral
 
 client = None
 
@@ -15,12 +15,12 @@ class Speaker():
     def __init__(self):#, client):
         #self.client = client
         self.playing = False
-        self.Peripheral = bluepy.Peripheral()
+        self.Peripheral = btle.Peripheral()
         self.Mac = "00:58:50:1D:B3:35"
         self.Rooms = {"Room1": "Kitchen",
                     "Room2": "Livingroom"}
-        self.song = {"sad": '.\\prj2\\speakers\\Tammy-Stan-Devereaux.mp3', 
-                    "happy": '.\\prj2\\speakers\\Pharrell-Williams-Happy-f7.mp3',
+        self.song = {"sad": 'Tammy-Stan-Devereaux.mp3', 
+                    "happy": 'Pharrell-Williams-Happy-f7.mp3',
                     "angry": 'tbd',
                     "neutral": 'tbd'}
         pygame.mixer.init()
@@ -44,7 +44,7 @@ class Speaker():
         if self.song[emotion] == 'tbd':
             print('No song implemented yet \n')
         else:
-            
+            self.connectToRoom(roomNr)
             self.loadMusic(self.song[emotion])
             print('Playing sound "song": {0}, "room": {1}\n'.format(self.song[emotion], roomNr))
             payload = '{"playing": {"song": {0}, "room": {1}}}', self.song[emotion], roomNr
@@ -79,7 +79,7 @@ def main():
     #client.subscribe("pi_server/audio", callback=spk.audio_callback)
 
     spk = Speaker()
-    spk.playMusic(emotion="happy",roomNr=2)
+    spk.playMusic(emotion="happy",roomNr=1)
     print("Volume is: ", pygame.mixer.music.get_volume(),"\n")
 
     while spk.updatePlayStatus() == True:
