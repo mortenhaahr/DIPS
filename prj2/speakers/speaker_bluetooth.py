@@ -7,7 +7,7 @@ from mqtt_callback_client import MQTTCallbackClient
 import pygame
 import socket
 
-import bluepy
+import bluepy.btle
 
 client = None
 
