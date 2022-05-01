@@ -15,7 +15,7 @@ class Speaker():
     def __init__(self):#, client):
         #self.client = client
         self.playing = False
-        self.Peripheral = btle.Peripheral()
+        self.Peripheral = Peripheral()
         self.Mac = "00:58:50:1D:B3:35"
         self.Rooms = {"Room1": "Kitchen",
                     "Room2": "Livingroom"}
