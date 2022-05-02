@@ -100,7 +100,7 @@ def led_brightness_control(payload):
     global led2
     brightness = 127
 
-    time = datetime.datetime.strptime(payload["datetime"])
+    time = datetime.strptime(payload["datetime"], "%Y-%m-%d %H:%M:%S")
 
     if time.hour < 12:
         brightness += 127 - (time.hour * (127/12))
@@ -108,7 +108,7 @@ def led_brightness_control(payload):
     if time.hour > 12:
         brightness += ((time.hour - 12) * (127/12))
 
-    led1.set_brightness(0.01)
+    led1.set_brightness(brightness)
     led2.set_brightness(brightness)
 
 def led_system_control(payload):
