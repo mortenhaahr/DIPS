@@ -1,8 +1,29 @@
 from flask import Flask, request
 import json
+from mqtt_callback_client import MQTTCallbackClient
+import socket
+
+context = {}
 
 
-def create_basic_text_response(text, reprompt_text="Can I help you with anything else?", end_session=False):
+def get_context(topic, payload):
+    """Known error: If the topic has a value that is a json object that equals to the name of the subtopic then the json object will be overwritten."""
+    global context
+    context = context
+    update_to_context = topic.split("/")[2:]
+    update_to_context.append(payload)
+    # From SO: https://stackoverflow.com/questions/7653726/how-to-turn-a-list-into-nested-dict-in-python
+    from functools import reduce
+
+    updated_context_nested_dict = reduce(lambda x, y: {y: x}, update_to_context[::-1])
+    from pydantic.utils import deep_update
+
+    context = deep_update(context, updated_context_nested_dict)
+
+
+def create_basic_text_response(
+    text, reprompt_text="Can I help you with anything else?", end_session=False
+):
     return {
         "version": "1.0",
         "response": {
@@ -54,11 +75,12 @@ app = Flask(__name__)  # __name__ = filename
 
 
 def launch_handler(data_request):
-    mood = "happy"
+    emotion = "happy"
     response = create_basic_text_response(
-        f"Hi there! Your current mood is set to {mood}. Do you want to change it?"
+        f"""Hi there! Your current emotion is set to {emotion}. You can change it by saying: "Change my emotion to" followed by your emotion. I currently support the emotions "angry", "happy", "sad" and "neutral"."""
     )
     return json.dumps(response)
+
 
 def intent_handler(data_request):
     print("Intent handler called")
@@ -70,7 +92,10 @@ def default_command(data_request):
     return json.dumps(basic_response)
 
 
-request_types = {"LaunchRequest": launch_handler, "IntentRequest": intent_handler} # Unsupported so far: CanFulfillIntentRequest, SessionEndedRequest
+request_types = {
+    "LaunchRequest": launch_handler,
+    "IntentRequest": intent_handler,
+}  # Unsupported so far: CanFulfillIntentRequest, SessionEndedRequest
 
 
 @app.route("/", methods=["POST", "GET"])  # Post is for new data and get is for all
@@ -82,4 +107,13 @@ def mood_controller():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    client = MQTTCallbackClient(client_id="rpi-audio")
+    broker_ip = socket.gethostbyname("rpi-server.local")
+    client.connect(broker_ip, 1883)
+    client.subscribe("pi_server/context/#", callback=get_context)
+    get_context("pi_server/context/room1", {"occupied": True})
+    get_context("pi_server/context/room1/music_playing", {"music_playing": True})
+    get_context("pi_server/context/room1/occupied", {"music_playing": True})
+    x = 2
+    # client.loop_forever()
+    # app.run(debug=True)
