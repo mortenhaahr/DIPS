@@ -109,15 +109,14 @@ def main():
     #Setup speaker
     spk = Speaker()
 
-    client.subscribe("pi_server/context/emotion", callback=spk.emotion_callback)
+    #client.subscribe("pi_server/context/emotion", callback=spk.emotion_callback)
 
 
     spk.setupTopics(client)
 
     print("Ready to play \n")
 
-    while True:
-        continue
+    client.loop_forever()
 
 if __name__ == "__main__":
 	main()
