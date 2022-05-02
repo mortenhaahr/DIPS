@@ -9,7 +9,7 @@ from mqtt_callback_client import MQTTCallbackClient
 import pygame
 import socket
 
-from bluepy.btle import Peripheral
+from prj2.speakers.bluetoothctl import Bluetoothctl
 
 client = None
 emotion = None
@@ -20,7 +20,7 @@ class Speaker():
         #self.client = client
         self.playing = False
         self.Mac = "00:58:50:1D:B3:35"
-        self.conn = bluetoothctl()
+        self.conn = Bluetoothctl()
         self.connected = False
         
         self.Rooms = {"Room1": "Kitchen",
