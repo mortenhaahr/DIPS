@@ -17,13 +17,13 @@ class LedStrip():
     def on(self):
         if (self.emotion != None):
             self.client.publish(self.topic + "/set", self.emotion)
-        self.set_brigtness(self.brightness)
+        self.set_brightness(self.brightness)
 
     def update_emotion(self, emotion):
         self.emotion = '{"color": {"hue": %d, "saturation": 100}}'%self.colors[emotion]
         self.on()
 
-    def set_brigtness(self, value):
+    def set_brightness(self, value):
         self.brightness = value
         payload = '{"brightness": %d}'%self.brightness
         self.client.publish(self.topic + "/set", payload)
@@ -52,7 +52,7 @@ class LedBlinkt():
         self.on()
 
         
-    def set_brigtness(self, value):
+    def set_brightness(self, value):
         self.brightness = value
         blinkt.set_brightness(self.brightness/254)
         self.on()
@@ -98,15 +98,15 @@ def led_room_control(payload, room_nbr):
 def led_brightness_control(payload):
     global led1
     global led2
-    brightness = 127
+    brightness = 0
 
-    time = datetime.strptime(payload["datetime"], "%Y-%m-%d %H:%M:%S")
+    time = datetime.strptime(payload["datetime"], "%d/%m/%Y %H:%M:%S")
 
     if time.hour < 12:
-        brightness += 127 - (time.hour * (127/12))
+        brightness = 254 - (time.hour * (254/12)) - (time.minute * (254/(12*60)))
     
     if time.hour >= 12:
-        brightness += ((time.hour - 12) * (127/12))
+        brightness = ((time.hour - 12) * (254/12)) - (time.minute * (254/(12*60)))
 
     logging.info(f"brightness: {brightness}")
 
@@ -136,4 +136,4 @@ def setup_leds(client):
     client.subscribe(room_context + "1",    callback=lambda payload: led_room_control(payload, 1))
     client.subscribe(room_context + "2",    callback=lambda payload: led_room_control(payload, 2))
     client.subscribe(emotion_context,       callback=led_new_emotion)
-    client.subscribe(system_context,        callback=lambda payload: led_system_control(payload))
+    client.subscribe(system_context,        callback=led_system_control)
