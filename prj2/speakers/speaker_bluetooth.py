@@ -1,7 +1,6 @@
 import json
 import os
 import logging
-import time
 
 import paho.mqtt.client as mqtt
 from mqtt_callback_client import MQTTCallbackClient
@@ -118,10 +117,6 @@ def main():
 
     spk.setupTopics(client)
     spk.emotion_callback(json_to_send)
-    spk.room_callback(json_to_room,2)
-    time.sleep(5)
-    spk.room_callback(json_to_room,1)
-    time.sleep(5)
     spk.room_callback(json_to_room,2)
 
     print("Ready to play \n")
