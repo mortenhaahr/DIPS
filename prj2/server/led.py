@@ -108,7 +108,7 @@ def led_brightness_control(payload):
     if time.hour > 12:
         brightness += ((time.hour - 12) * (127/12))
 
-    led1.set_brightness(brightness)
+    led1.set_brightness(0.01)
     led2.set_brightness(brightness)
 
 def led_system_control(payload):
