@@ -8,7 +8,7 @@ from mqtt_callback_client import MQTTCallbackClient
 import pygame
 import socket
 
-#from bluepy.btle import Peripheral
+from bluepy.btle import Peripheral
 
 client = None
 emotion = None
@@ -18,7 +18,7 @@ class Speaker():
     def __init__(self):#, client):
         #self.client = client
         self.playing = False
-        #self.Peripheral = Peripheral()
+        self.Peripheral = Peripheral()
         self.Mac = "00:58:50:1D:B3:35"
         self.Rooms = {"Room1": "Kitchen",
                     "Room2": "Livingroom"}
@@ -27,6 +27,8 @@ class Speaker():
                     "angry": 'tbd',
                     "neutral": 'tbd'}
         pygame.mixer.init()
+        pygame.mixer.music.load(self.song["happy"])
+        
 
     
         
@@ -34,11 +36,11 @@ class Speaker():
         pygame.mixer.music.load(file)
 
     def connectToRoom(self, roomNr):
-        if roomNr == 0:
+        if roomNr == 1:
             print("Disconnecting from {0}",self.Mac)
             #self.Peripheral.disconnect()
             print("Disconnected")
-        elif roomNr == 1:
+        elif roomNr == 2:
             print("Connecting to {0}",self.Mac)
             #self.Peripheral.connect(self.Mac)
             print("Connected")
@@ -46,11 +48,6 @@ class Speaker():
             print("Invalid room Nr")
 
     def playMusic(self, emotion, roomNr):
-        
-            #self.connectToRoom(roomNr)
-            print('Playing sound "song": {0}, "room": {1}\n'.format(self.song[emotion], roomNr))
-            #payload = '{"playing": {"song": {0}, "room": {1}}}', self.song[emotion], roomNr
-            #self.client.publish("zigbee2mqtt/audio/music", payload)
             pygame.mixer.music.play(loops=-1)  
 
     def stopMusic(self):
@@ -73,6 +70,7 @@ class Speaker():
     def room_callback(self, payload, roomNr):
         global emotion
         playing = payload['music_playing']
+        print("Room Calback for room: ",roomNr)
         if playing == True:
             self.connectToRoom(roomNr)
             self.playMusic(emotion,roomNr)
@@ -80,9 +78,9 @@ class Speaker():
             self.stopMusic()
 
     def setupTopics(self,client):
-        client.subscribe("pi_server/context/emotion", callback=self.emotion_callback)
-        client.subscribe("pi_server/context/room" + "1", callback=lambda payload: self.room_callback(payload, 1))
-        client.subscribe("pi_server/context/room" + "2", callback=lambda payload: self.room_callback(payload, 2))
+        client.subscribe("pi_server/context/emotion", callback=self.emotion_callback,qos=1)
+        client.subscribe("pi_server/context/room" + "1", callback=lambda payload: self.room_callback(payload, 1),qos=1)
+        client.subscribe("pi_server/context/room" + "2", callback=lambda payload: self.room_callback(payload, 2),qos=1)
 
 
 def main():
@@ -91,9 +89,10 @@ def main():
 	    level=logging.INFO, format="%(asctime)s : %(levelname)s:  %(message)s"
 	)
     #Setup mqtt
-    pi_ip = socket.gethostbyname("rpi-server.local")
+    #pi_ip = socket.gethostbyname("rpi-server.local")
     #pi_ip = "192.168.43.146"
     #pi_ip = "192.168.143.44"    #pc
+    pi_ip = "192.168.143.239"   #server
     
 
     #Setup client
@@ -103,6 +102,10 @@ def main():
     json_to_send = {
 			"emotion": "happy"
 		}
+    json_to_room = {
+        "occupancy": True,
+        "music_playing": True
+    }
     
 
 
@@ -113,10 +116,13 @@ def main():
 
 
     spk.setupTopics(client)
+    spk.emotion_callback(json_to_send)
+    spk.room_callback(json_to_room,2)
 
     print("Ready to play \n")
-    client.publish("pi_server/context/emotion",json.dumps(json_to_send))
-    client.loop_forever()
+    #client.publish("pi_server/context/emotion",json.dumps(json_to_send))
+    while True: 
+        client.loop_forever()
 
 if __name__ == "__main__":
 	main()
