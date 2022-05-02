@@ -9,7 +9,7 @@ emotion_topic 		= base_topic + "emotion"
 voice_topic 		= base_topic + "voice"
 pir_topic 			= base_topic + "pir"
 led_topic 			= base_topic + "led"
-audio_topic 		= audio_base + "commands"
+command_topic 		= audio_base + "commands"
 
 context_topic  		= base_topic + "context/"
 datetime_context 	= context_topic + "datetime"
