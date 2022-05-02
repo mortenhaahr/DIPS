@@ -31,11 +31,13 @@ Context model:
 		string
 	
 	Topic = "room1": {
-		"occupied": bool
+		"occupied": bool,
+		"music_playing": bool
 	}
 	
 	Topic = "room2": {
-		"occupied": bool
+		"occupied": bool,
+		"music_playing": bool
 	}
 	
 	Topic = "voice": {

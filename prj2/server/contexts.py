@@ -14,13 +14,13 @@ def update_room_context(payload, client, room_nbr):
 	logging.debug(payload)
 
 	try:
-		if system_on:
-			json_to_send = {
-				"occupied": payload["occupancy"]
-			}
+		json_to_send = {
+			"occupied": payload["occupancy"],
+			"music_playing": (system_on and payload["occupancy"])
+		}
 
-			client.publish(room_context + room_nbr, json.dumps(json_to_send))
-			update_time(client)
+		client.publish(room_context + room_nbr, json.dumps(json_to_send))
+		update_time(client)
 
 	except KeyError:
 		logging.error("The key 'occupancy' was not in the JSON!")	
