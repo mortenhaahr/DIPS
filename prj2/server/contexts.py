@@ -7,7 +7,10 @@ import threading
 from datetime import datetime
 import geocoder
 
-system_on = False
+system_control = {
+	"leds_on" : False,
+	"audio_on": False
+}
 
 def update_room_context(payload, client, room_nbr):
 	global system_on
@@ -16,7 +19,7 @@ def update_room_context(payload, client, room_nbr):
 	try:
 		json_to_send = {
 			"occupied": payload["occupancy"],
-			"music_playing": (system_on and payload["occupancy"])
+			"music_playing": (system_control["leds_on"] and payload["occupancy"])
 		}
 
 		client.publish(room_context + room_nbr, json.dumps(json_to_send))
@@ -27,7 +30,7 @@ def update_room_context(payload, client, room_nbr):
 
 
 def update_emotion_callback(payload, client):
-	logging.debug(payload)
+	logging.info(payload)
 
 	try:
 		emotion = payload['emotion']
@@ -47,11 +50,12 @@ def update_emotion_callback(payload, client):
 
 		client.publish(emotion_context, json.dumps(to_send))
 
-		new_status = {"on": True}
-		voice_context_callback(new_status, client)
-		update_time(client)
+		command_context_callback({
+				"leds_on" : True,
+				"audio_on": True
+			}, client)
 
-		logging.info("Update Emotion callback, not implemented yet!")
+		update_time(client)
 
 	except ValueError:
 		logging.error("Unknown emotion: " + emotion)
@@ -78,17 +82,15 @@ def position_context_updater(client):
 	threading.Timer(3600*24, lambda: position_context_updater(client)).start()
 
 
-def voice_context_callback(payload, client):
-	global system_on
+def command_context_callback(payload, client):
+	global system_control
 	logging.debug(payload)
 
 	try:
-		system_on = payload["on"]
+		system_control["leds_on"] = payload["leds_on"]
+		system_control["audio_on"] = payload["audio_on"]
 
-		to_send = {
-			"on": system_on
-		}
-		client.publish(voice_context, json.dumps(to_send))
+		client.publish(system_context, json.dumps(system_control))
 		update_time(client)
 
 	except KeyError:
@@ -96,7 +98,7 @@ def voice_context_callback(payload, client):
 
 
 def init_contexts(client):
-	client.subscribe(voice_topic, 		callback=lambda payload: voice_context_callback(payload, client))
+	client.subscribe(command_topic, 	callback=lambda payload: command_context_callback(payload, client))
 	client.subscribe(emotion_topic, 	callback=lambda payload: update_emotion_callback(payload, client))
 	client.subscribe(pir_topic + room1, callback=lambda payload: update_room_context(payload, client, "1"))
 	client.subscribe(pir_topic + room2, callback=lambda payload: update_room_context(payload, client, "2"))

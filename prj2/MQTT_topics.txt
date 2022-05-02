@@ -17,9 +17,11 @@ Server -> Audio controller:
 	}
 	
 Audio controller -> Server:
-	Topic = "voice": {
-		"command": string
+	Topic = "commands": {
+		"leds_on": bool,
+		"audio_on": bool
 	}
+	
 	
 Context model:
 	Context: 
@@ -27,8 +29,12 @@ Context model:
 	Topic = "emotion": string	
 	Topic = "datetime": string
 	
-	Topic = "position":
-		string
+	Topic = "system": {
+		"leds_on": bool,
+		"audio_on": bool
+	}
+	
+	Topic = "position": string
 	
 	Topic = "room1": {
 		"occupied": bool,
@@ -38,9 +44,5 @@ Context model:
 	Topic = "room2": {
 		"occupied": bool,
 		"music_playing": bool
-	}
-	
-	Topic = "voice": {
-		"on": bool
 	}
 	
