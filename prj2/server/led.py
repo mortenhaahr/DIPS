@@ -17,13 +17,13 @@ class LedStrip():
     def on(self):
         if (self.emotion != None):
             self.client.publish(self.topic + "/set", self.emotion)
-        self.set_brightness(self.brightness)
+        self.set_brigtness(self.brightness)
 
     def update_emotion(self, emotion):
         self.emotion = '{"color": {"hue": %d, "saturation": 100}}'%self.colors[emotion]
         self.on()
 
-    def set_brightness(self, value):
+    def set_brigtness(self, value):
         self.brightness = value
         payload = '{"brightness": %d}'%self.brightness
         self.client.publish(self.topic + "/set", payload)
@@ -52,7 +52,7 @@ class LedBlinkt():
         self.on()
 
         
-    def set_brightness(self, value):
+    def set_brigtness(self, value):
         self.brightness = value
         blinkt.set_brightness(self.brightness/254)
         self.on()
@@ -100,13 +100,13 @@ def led_brightness_control(payload):
     global led2
     brightness = 0
 
-    time = datetime.strptime(payload["datetime"], "%d/%m/%Y %H:%M:%S")
+    curr_time = datetime.strptime(payload["datetime"], "%d/%m/%Y %H:%M:%S")
 
-    if time.hour < 12:
-        brightness = 254 - (time.hour * (254/12)) - (time.minute * (254/(12*60)))
+    if curr_time.hour < 12:
+        brightness = 254 - (curr_time.hour * (254/12))
     
-    if time.hour >= 12:
-        brightness = ((time.hour - 12) * (254/12)) - (time.minute * (254/(12*60)))
+    if curr_time.hour >= 12:
+        brightness = ((curr_time.hour - 12) * (254/12))
 
     logging.info(f"brightness: {brightness}")
 
