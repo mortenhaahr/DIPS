@@ -103,10 +103,10 @@ def led_brightness_control(payload):
     curr_time = datetime.strptime(payload["datetime"], "%d/%m/%Y %H:%M:%S")
 
     if curr_time.hour < 12:
-        brightness = 254 - (curr_time.hour * (254/12))
+        brightness = 254 - (curr_time.hour * (254/12)) - (curr_time.minute * (254/(12*60)))
     
     if curr_time.hour >= 12:
-        brightness = ((curr_time.hour - 12) * (254/12))
+        brightness = ((curr_time.hour - 12) * (254/12)) + (curr_time.minute * (254/(12*60)))
 
     logging.info(f"brightness: {brightness}")
 
