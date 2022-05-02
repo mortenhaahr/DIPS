@@ -60,7 +60,7 @@ def update_emotion_callback(payload, client):
 
 def update_time(client):
 	# dd/mm/YY H:M:S
-	client.publish(datetime_context, datetime.now().strftime('{"datetime": %d/%m/%Y %H:%M:%S }'))
+	client.publish(datetime_context, datetime.now().strftime('{"datetime": "%d/%m/%Y %H:%M:%S" }'))
 
 def time_context_updater(client):
 	update_time(client)
