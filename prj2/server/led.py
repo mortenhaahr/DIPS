@@ -77,7 +77,7 @@ def led_room_control(payload, room_nbr):
     global led1
     global led2
 
-    logging.info(f"led_room_control: room_nbr = {room_nbr}")
+    logging.debug(f"led_room_control: room_nbr = {room_nbr}")
 
     if payload["occupied"]:
         if room_nbr == 1:
@@ -108,7 +108,7 @@ def led_brightness_control(payload):
     if curr_time.hour >= 12:
         brightness = ((curr_time.hour - 12) * (254/12))
 
-    logging.info(f"brightness: {brightness}")
+    logging.debug(f"brightness: {brightness}")
 
     led1.set_brightness(brightness)
     led2.set_brightness(brightness)

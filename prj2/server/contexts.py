@@ -30,19 +30,10 @@ def update_room_context(payload, client, room_nbr):
 
 
 def update_emotion_callback(payload, client):
-	logging.info(payload)
+	logging.debug(payload)
 
 	try:
 		emotion = payload['emotion']
-
-		if emotion == "happy":
-			logging.info("Happy emotion")
-		elif emotion == "sad":
-			logging.info("Sad emotion")
-		elif emotion == "angry":
-			logging.info("Angry emotion")
-		else:
-			raise ValueError
 
 		to_send = {
 			"emotion": emotion
