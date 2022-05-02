@@ -133,7 +133,7 @@ def setup_leds(client):
     led2 = LedStrip(client, led_topic + room2)
 
     client.subscribe(datetime_context,      callback=led_brightness_control)
-    client.subscribe(room_context + "1",    callback=lambda payload: led_room_control(payload, 1))
-    client.subscribe(room_context + "2",    callback=lambda payload: led_room_control(payload, 2))
+    client.subscribe(room_context + "1" + occupied_context,    callback=lambda payload: led_room_control(payload, 1))
+    client.subscribe(room_context + "2" + occupied_context,    callback=lambda payload: led_room_control(payload, 2))
     client.subscribe(emotion_context,       callback=led_new_emotion)
     client.subscribe(system_context,        callback=led_system_control)

@@ -16,5 +16,7 @@ datetime_context 	= context_topic + "datetime"
 emotion_context 	= context_topic + "emotion"
 position_context 	= context_topic + "position"
 room_context 		= context_topic + "room"
+occupied_context 	= "/occupied"
+music_playing_context 	= "/music_playing"
 system_context 		= context_topic + "system"
 

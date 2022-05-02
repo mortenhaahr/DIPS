@@ -17,12 +17,16 @@ def update_room_context(payload, client, room_nbr):
 	logging.debug(payload)
 
 	try:
-		json_to_send = {
-			"occupied": payload["occupancy"],
-			"music_playing": (system_control["leds_on"] and payload["occupancy"])
-		}
 
-		client.publish(room_context + room_nbr, json.dumps(json_to_send))
+		client.publish(room_context + room_nbr + music_playing_context, json.dumps({
+			"music_playing": (system_control["leds_on"] and payload["occupancy"])
+			}))
+
+		client.publish(room_context + room_nbr + occupied_context, json.dumps({
+			"occupied": payload["occupancy"]
+			}))
+			
+
 		update_time(client)
 
 	except KeyError:
