@@ -18,10 +18,10 @@ class Speaker():
     def __init__(self):#, client):
         #self.client = client
         self.playing = False
-        self.Peripheral = Peripheral()
-        self.Peripheral.disconnect()
-        self.connected = False
         self.Mac = "00:58:50:1D:B3:35"
+        self.Peripheral = Peripheral(self.Mac)
+        self.connected = False
+        
         self.Rooms = {"Room1": "Kitchen",
                     "Room2": "Livingroom"}
         self.song = {"sad": 'Tammy-Stan-Devereaux.mp3', 
