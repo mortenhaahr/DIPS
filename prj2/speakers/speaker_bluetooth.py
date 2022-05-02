@@ -97,7 +97,7 @@ def main():
     
 
     #Setup client
-    client = MQTTCallbackClient(client_id="Kubuntu_sub", userdata="DumDumReceiver")
+    client = MQTTCallbackClient(client_id="Kubuntu_sub2", userdata="DumDumReceiver")
     client.connect(pi_ip, 1883)  # rpi-server ip
 
     json_to_send = {
