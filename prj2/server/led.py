@@ -15,7 +15,7 @@ class LedStrip():
         self.emotion = None
 
     def on(self):
-        if (self.emotion):
+        if (self.emotion != None):
             self.client.publish(self.topic + "/set", self.emotion)
         self.set_brigtness(self.brightness)
 
@@ -35,16 +35,17 @@ class LedStrip():
 class LedBlinkt():
     def __init__(self):
         self.colors = {"sad": 300, "angry":360, "happy":120, "neutral":60}
-        self.hue = 0
+        self.hue = None
 
     def on(self):
         self.off()
 
-        for i in range(8):
-            r, g, b = [int(c * 255) for c in hsv_to_rgb(self.hue/360, 1.0, 1.0)]
-            blinkt.set_pixel(i, r, g, b)
+        if (self.hue != None):
+            for i in range(8):
+                r, g, b = [int(c * 255) for c in hsv_to_rgb(self.hue/360, 1.0, 1.0)]
+                blinkt.set_pixel(i, r, g, b)
 
-        blinkt.show()
+            blinkt.show()
     
     def update_emotion(self, emotion):
         self.hue = self.colors[emotion]
