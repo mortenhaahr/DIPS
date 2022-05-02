@@ -108,11 +108,11 @@ def led_brightness_control(payload):
     led1.set_brightness(brightness)
     led2.set_brightness(brightness)
 
-def led_voice_control(payload):
+def led_system_control(payload):
     global led1
     global led2
 
-    if payload['on']:
+    if payload['leds_on']:
         led1.on()
         led2.on()
     else:
@@ -131,4 +131,4 @@ def setup_leds(client):
     client.subscribe(room_context + "1",    callback=lambda payload: led_room_control(payload, 1))
     client.subscribe(room_context + "2",    callback=lambda payload: led_room_control(payload, 2))
     client.subscribe(emotion_context,       callback=led_new_emotion)
-    client.subscribe(voice_context,         callback=lambda payload: led_voice_control(payload))
+    client.subscribe(system_context,        callback=lambda payload: led_system_control(payload))
