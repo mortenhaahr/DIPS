@@ -6,7 +6,6 @@ base_topic 			= "pi_server/"
 audio_base 			= base_topic + "audio/"
 
 emotion_topic 		= base_topic + "emotion"
-voice_topic 		= base_topic + "voice"
 pir_topic 			= base_topic + "pir"
 led_topic 			= base_topic + "led"
 command_topic 		= audio_base + "commands"
