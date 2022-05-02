@@ -117,7 +117,7 @@ def led_system_control(payload):
     global led1
     global led2
 
-    if payload['leds_on']:
+    if payload['on']:
         led1.on()
         led2.on()
     else:
@@ -136,4 +136,4 @@ def setup_leds(client):
     client.subscribe(room_context + "1" + occupied_context,    callback=lambda payload: led_room_control(payload, 1))
     client.subscribe(room_context + "2" + occupied_context,    callback=lambda payload: led_room_control(payload, 2))
     client.subscribe(emotion_context,       callback=led_new_emotion)
-    client.subscribe(system_context,        callback=led_system_control)
+    client.subscribe(leds_context,        callback=led_system_control)

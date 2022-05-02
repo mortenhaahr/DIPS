@@ -13,7 +13,7 @@ system_control = {
 }
 
 def update_room_context(payload, client, room_nbr):
-	global system_on
+	global system_control
 	logging.debug(payload)
 
 	try:
@@ -83,17 +83,18 @@ def command_context_callback(payload, client):
 
 	try:
 		system_control["leds_on"] = payload["leds_on"]
+		client.publish(leds_context, json.dumps({"on": system_control["leds_on"]}))
 
 	except KeyError:
 		logging.error("The key 'leds_on' was not in the JSON!")	
 
 	try:
 		system_control["audio_on"] = payload["audio_on"]
+		client.publish(audio_context, json.dumps({"on": system_control["audio_on"]}))
 	except KeyError:
 		logging.error("The key 'audio_on' was not in the JSON!")
 	
 	
-	client.publish(system_context, json.dumps(system_control))
 	update_time(client)
 
 
