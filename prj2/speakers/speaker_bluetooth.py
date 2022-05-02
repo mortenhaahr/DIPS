@@ -78,9 +78,9 @@ class Speaker():
             self.stopMusic()
 
     def setupTopics(self,client):
-        client.subscribe("pi_server/context/emotion", callback=self.emotion_callback,qos=1)
-        client.subscribe("pi_server/context/room" + "1", callback=lambda payload: self.room_callback(payload, 1),qos=1)
-        client.subscribe("pi_server/context/room" + "2", callback=lambda payload: self.room_callback(payload, 2),qos=1)
+        client.subscribe("pi_server/context/emotion", callback=self.emotion_callback)#,qos=1)
+        client.subscribe("pi_server/context/room" + "1", callback=lambda payload: self.room_callback(payload, 1))
+        client.subscribe("pi_server/context/room" + "2", callback=lambda payload: self.room_callback(payload, 2))
 
 
 def main():
