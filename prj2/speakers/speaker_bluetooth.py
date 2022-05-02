@@ -19,6 +19,8 @@ class Speaker():
         #self.client = client
         self.playing = False
         self.Peripheral = Peripheral()
+        self.Peripheral.disconnect()
+        self.connected = False
         self.Mac = "00:58:50:1D:B3:35"
         self.Rooms = {"Room1": "Kitchen",
                     "Room2": "Livingroom"}
@@ -37,13 +39,16 @@ class Speaker():
 
     def connectToRoom(self, roomNr):
         if roomNr == 1:
-            print("Disconnecting from {0}",self.Mac)
+            print("Disconnecting from ",self.Mac)
             self.Peripheral.disconnect()
             print("Disconnected")
         elif roomNr == 2:
-            print("Connecting to {0}",self.Mac)
-            self.Peripheral = Peripheral(self.Mac)
-            print("Connected")
+            if self.connected == False:
+                print("Connecting to ",self.Mac)
+                self.Peripheral.connect(self.Mac)
+                print("Connected")
+            else:
+                print("Already connected to ",self.Mac)
         else:
             print("Invalid room Nr")
 
