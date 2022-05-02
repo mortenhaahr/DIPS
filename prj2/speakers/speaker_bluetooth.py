@@ -38,11 +38,11 @@ class Speaker():
     def connectToRoom(self, roomNr):
         if roomNr == 1:
             print("Disconnecting from {0}",self.Mac)
-            #self.Peripheral.disconnect()
+            self.Peripheral.disconnect()
             print("Disconnected")
         elif roomNr == 2:
             print("Connecting to {0}",self.Mac)
-            #self.Peripheral.connect(self.Mac)
+            self.Peripheral.connect(self.Mac)
             print("Connected")
         else:
             print("Invalid room Nr")
