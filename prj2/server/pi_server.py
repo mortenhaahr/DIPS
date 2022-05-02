@@ -24,7 +24,7 @@ def main():
 	init_contexts(client)
 	setup_leds(client)
 
-	client.loop_forever()
+	client.loop_forever(timeout=10)
 
 if __name__ == "__main__":
 	main()
