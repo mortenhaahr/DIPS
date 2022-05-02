@@ -1,7 +1,6 @@
 import json
 import os
 import logging
-import time
 
 import paho.mqtt.client as mqtt
 from mqtt_callback_client import MQTTCallbackClient
@@ -43,7 +42,7 @@ class Speaker():
             print("Disconnected")
         elif roomNr == 2:
             print("Connecting to {0}",self.Mac)
-            self.Peripheral.connect(self.Mac)
+            self.Peripheral = Peripheral(self.Mac)
             print("Connected")
         else:
             print("Invalid room Nr")
@@ -79,9 +78,10 @@ class Speaker():
             self.stopMusic()
 
     def setupTopics(self,client):
-        client.subscribe("pi_server/context/emotion", callback=self.emotion_callback,qos=1)
-        client.subscribe("pi_server/context/room" + "1", callback=lambda payload: self.room_callback(payload, 1),qos=1)
-        client.subscribe("pi_server/context/room" + "2", callback=lambda payload: self.room_callback(payload, 2),qos=1)
+        pass
+        #client.subscribe("pi_server/context/emotion", callback=self.emotion_callback)#,qos=1)
+        #client.subscribe("pi_server/context/room" + "1", callback=lambda payload: self.room_callback(payload, 1))
+        #client.subscribe("pi_server/context/room" + "2", callback=lambda payload: self.room_callback(payload, 2))
 
 
 def main():
@@ -97,7 +97,7 @@ def main():
     
 
     #Setup client
-    client = MQTTCallbackClient(client_id="Kubuntu_sub", userdata="DumDumReceiver")
+    client = MQTTCallbackClient(client_id="Kubuntu_sub2", userdata="DumDumReceiver")
     client.connect(pi_ip, 1883)  # rpi-server ip
 
     json_to_send = {
@@ -118,10 +118,6 @@ def main():
 
     spk.setupTopics(client)
     spk.emotion_callback(json_to_send)
-    spk.room_callback(json_to_room,2)
-    time.sleep(5)
-    spk.room_callback(json_to_room,1)
-    time.sleep(5)
     spk.room_callback(json_to_room,2)
 
     print("Ready to play \n")
