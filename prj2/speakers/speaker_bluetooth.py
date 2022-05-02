@@ -1,7 +1,7 @@
 import json
 import os
 import logging
-from matplotlib.pyplot import pause
+import time
 
 import paho.mqtt.client as mqtt
 from mqtt_callback_client import MQTTCallbackClient
@@ -119,9 +119,9 @@ def main():
     spk.setupTopics(client)
     spk.emotion_callback(json_to_send)
     spk.room_callback(json_to_room,2)
-    pause(5)
+    time.sleep(5)
     spk.room_callback(json_to_room,1)
-    pause(5)
+    time.sleep(5)
     spk.room_callback(json_to_room,2)
 
     print("Ready to play \n")
