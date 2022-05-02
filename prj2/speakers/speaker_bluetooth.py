@@ -103,7 +103,7 @@ def main():
     json_to_send = {
 			"emotion": "happy"
 		}
-    client.publish("pi_server/context/emotion",json.dumps(json_to_send))
+    
 
 
     #Setup speaker
@@ -115,7 +115,7 @@ def main():
     spk.setupTopics(client)
 
     print("Ready to play \n")
-
+    client.publish("pi_server/context/emotion",json.dumps(json_to_send))
     client.loop_forever()
 
 if __name__ == "__main__":
