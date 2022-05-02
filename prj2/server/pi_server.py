@@ -15,7 +15,7 @@ def main():
 	)
 	pi_ip = socket.gethostbyname("rpi-server.local")
 
-	client = MQTTCallbackClient(client_id="Kubuntu_sub", userdata="DumDumReceiver")
+	client = MQTTCallbackClient(client_id="rpi-server")
 	client.connect(pi_ip, 1883)  # rpi-server ip
 	
 	#All topics - use for extreme debugging
