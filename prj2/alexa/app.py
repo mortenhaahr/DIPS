@@ -90,7 +90,7 @@ def launch_handler(data_request):
     return json.dumps(response)
 
 
-def change_emotion_callback(intent):
+def set_emotion_callback(intent):
     emotion = intent["slots"]["emotion"]["value"]
     emotion_topic = f"{base_topic}/emotion"
     client.publish(emotion_topic, json.dumps({"emotion": emotion}))
@@ -98,8 +98,18 @@ def change_emotion_callback(intent):
     return json.dumps(response)
 
 
+def get_emotion_callback(intent):
+    response = create_basic_text_response(
+        f"""Your mood is currently set to {context.get("emotion", "undefined")}. Do you want to change it?"""
+    )
+    return json.dumps(response)
+
+
 def intent_handler(data_request):
-    intents_callbacks = {"change_emotion": change_emotion_callback}
+    intents_callbacks = {
+        "set_emotion": set_emotion_callback,
+        "get_emotion": get_emotion_callback,
+    }
     intent = data_request["intent"]["name"]
     print("Intent handler called")
     invocation = intents_callbacks.get(intent, default_command)
