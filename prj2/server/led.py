@@ -24,7 +24,7 @@ class LedStrip():
             payload = '{"brightness": %d}'%self.brightness
             self.client.publish(self.topic + "/set", payload)
         
-        self.client.publish(led_topic, json.dumps({"room": "2", "on": True}))
+            self.client.publish(led_topic, json.dumps({"room": "2", "on": True}))
 
 
     def update_emotion(self, emotion):
