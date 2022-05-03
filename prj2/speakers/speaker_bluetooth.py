@@ -28,37 +28,44 @@ class Speaker():
                     "angry": 'tbd',
                     "neutral": 'tbd'}
         pygame.mixer.init()
-        pygame.mixer.music.load(self.song["happy"])
-        
-
-    
+        pygame.mixer.music.load(self.song["happy"])  
         
     def loadMusic(self, file):
         pygame.mixer.music.load(file)
 
-    
-        
-
-    def connectToRoom(self, roomNr):
+    def stopMusic(self,roomNr):
         if roomNr == 1:
-            print("Disconnecting from ",self.Mac)
-            self.conn.disconnect(self.Mac)
-            print("Disconnected")
+            #Stop music on smart speaker
+            pass
         elif roomNr == 2:
-            print("Connecting to ",self.Mac)
-            self.conn.connect(self.Mac)
-            print("Connected")
-            
-
-            
+            pygame.mixer.music.stop()
         else:
-            print("Invalid room Nr")
+            print("stopMusic: Unknown roomNr")
 
     def playMusic(self, emotion, roomNr):
+        if roomNr == 1:
+            print("Playing in room 1")
+            self.stopMusic(roomNr=2)
+            #play on smart speaker
+        elif roomNr == 2:
+            print("Playing in room 2")
+            self.stopMusic(roomNr=1)
             pygame.mixer.music.play(loops=-1)  
+        else:
+            print("playMusic: Unknown roomNr")
 
-    def stopMusic(self):
-        pygame.mixer.music.stop()
+    """ def connectToRoom(self, roomNr):
+        if roomNr == 1:
+            print("Connecting to Smart speaker")
+            #Connect here
+            print("Stop playing music from ",self.Mac)
+            self.stopMusic()
+        elif roomNr == 2:
+            print("Playing from ",self.Mac)
+            #self.conn.connect(self.Mac)
+            print("Stop playing from Smart speaker")
+        else:
+            print("Invalid room Nr") """
 
     def updatePlayStatus(self):
         self.playing = pygame.mixer.music.get_busy()
@@ -79,15 +86,15 @@ class Speaker():
         playing = payload['music_playing']
         print("Room Calback for room: ",roomNr)
         if playing == True:
-            self.connectToRoom(roomNr)
+            #self.connectToRoom(roomNr)
             self.playMusic(emotion,roomNr)
         else:
-            self.stopMusic()
+            self.stopMusic(roomNr)
 
     def setupTopics(self,client):
         client.subscribe("pi_server/context/emotion", callback=self.emotion_callback,qos=1)
-        client.subscribe("pi_server/context/room" + "1", callback=lambda payload: self.room_callback(payload, 1))
-        client.subscribe("pi_server/context/room" + "2", callback=lambda payload: self.room_callback(payload, 2))
+        client.subscribe("pi_server/context/room" + "1" + "/music_playing", callback=lambda payload: self.room_callback(payload, 1))
+        client.subscribe("pi_server/context/room" + "2" + "/music_playing", callback=lambda payload: self.room_callback(payload, 2))
 
 
 def main():
@@ -97,24 +104,12 @@ def main():
 	)
     #Setup mqtt
     #pi_ip = socket.gethostbyname("rpi-server.local")
-    #pi_ip = "192.168.43.146"
-    #pi_ip = "192.168.143.44"    #pc
     pi_ip = "192.168.143.239"   #server
     
 
     #Setup client
     client = MQTTCallbackClient(client_id="Kubuntu_sub2", userdata="DumDumReceiver")
     client.connect(pi_ip, 1883)  # rpi-server ip
-
-    # json_to_send = {
-	# 		"emotion": "happy"
-	# 	}
-    # json_to_room = {
-    #     "occupancy": True,
-    #     "music_playing": True
-    # }
-    
-
 
     #Setup speaker
     spk = Speaker()
