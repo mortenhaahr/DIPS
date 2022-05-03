@@ -1,14 +1,13 @@
 import json
 import os
 import logging
+import bluetoothctl
 
 import paho.mqtt.client as mqtt
 from mqtt_callback_client import MQTTCallbackClient
 
 import pygame
 import socket
-
-from bluepy.btle import Peripheral
 
 client = None
 emotion = None
@@ -19,7 +18,7 @@ class Speaker():
         #self.client = client
         self.playing = False
         self.Mac = "00:58:50:1D:B3:35"
-        self.Peripheral = Peripheral(self.Mac)
+        self.conn = bluetoothctl.Bluetoothctl()
         self.connected = False
         
         self.Rooms = {"Room1": "Kitchen",
@@ -37,18 +36,21 @@ class Speaker():
     def loadMusic(self, file):
         pygame.mixer.music.load(file)
 
+    
+        
+
     def connectToRoom(self, roomNr):
         if roomNr == 1:
             print("Disconnecting from ",self.Mac)
-            self.Peripheral.disconnect()
+            self.conn.disconnect(self.Mac)
             print("Disconnected")
         elif roomNr == 2:
-            if self.connected == False:
-                print("Connecting to ",self.Mac)
-                self.Peripheral.connect(self.Mac)
-                print("Connected")
-            else:
-                print("Already connected to ",self.Mac)
+            print("Connecting to ",self.Mac)
+            self.conn.connect(self.Mac)
+            print("Connected")
+            
+
+            
         else:
             print("Invalid room Nr")
 
@@ -104,30 +106,23 @@ def main():
     client = MQTTCallbackClient(client_id="Kubuntu_sub2", userdata="DumDumReceiver")
     client.connect(pi_ip, 1883)  # rpi-server ip
 
-    json_to_send = {
-			"emotion": "happy"
-		}
-    json_to_room = {
-        "occupancy": True,
-        "music_playing": True
-    }
+    # json_to_send = {
+	# 		"emotion": "happy"
+	# 	}
+    # json_to_room = {
+    #     "occupancy": True,
+    #     "music_playing": True
+    # }
     
 
 
     #Setup speaker
     spk = Speaker()
-
-    #client.subscribe("pi_server/context/emotion", callback=spk.emotion_callback)
-
-
     spk.setupTopics(client)
-    spk.emotion_callback(json_to_send)
-    spk.room_callback(json_to_room,2)
 
     print("Ready to play \n")
-    #client.publish("pi_server/context/emotion",json.dumps(json_to_send))
-    while True: 
-        client.loop_forever()
+     
+    client.loop_forever()
 
 if __name__ == "__main__":
 	main()
