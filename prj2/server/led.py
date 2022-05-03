@@ -17,12 +17,10 @@ class LedStrip():
         self.emotion = None
 
     def on(self):
-        global led_control
-        if ((self.emotion != None) and led_control):
+        if (self.emotion != None):
             self.client.publish(self.topic + "/set", self.emotion)
-            self.set_brightness(self.brightness)
-        else:
-            self.off()
+        self.set_brightness(self.brightness)
+
 
     def update_emotion(self, emotion):
         self.emotion = '{"color": {"hue": %d, "saturation": 100}}'%self.colors[emotion]
@@ -45,9 +43,7 @@ class LedBlinkt():
     def on(self):
         self.off()
 
-        global led_control
-
-        if ((self.hue != None) and led_control):
+        if (self.hue != None):
             for i in range(8):
                 r, g, b = [int(c * 255) for c in hsv_to_rgb(self.hue/360, 1.0, 1.0)]
                 blinkt.set_pixel(i, r, g, b)
@@ -84,9 +80,11 @@ def led_room_control(payload, room_nbr):
     global led1
     global led2
 
-    logging.debug(f"led_room_control: room_nbr = {room_nbr}")
 
-    if payload["occupied"]:
+    logging.debug(f"led_room_control: room_nbr = {room_nbr}")
+    global led_control
+
+    if payload["occupied"] and led_control:
         if room_nbr == 1:
             led1.on()
 
