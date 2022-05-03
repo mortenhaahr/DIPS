@@ -6,6 +6,8 @@ import blinkt
 from colorsys import hsv_to_rgb
 import logging
 
+led_control = False
+
 class LedStrip():
     def __init__(self, client, topic):
         self.client = client
@@ -17,7 +19,10 @@ class LedStrip():
     def on(self):
         if (self.emotion != None):
             self.client.publish(self.topic + "/set", self.emotion)
-        self.set_brightness(self.brightness)
+        
+        payload = '{"brightness": %d}'%self.brightness
+        self.client.publish(self.topic + "/set", payload)
+
 
     def update_emotion(self, emotion):
         self.emotion = '{"color": {"hue": %d, "saturation": 100}}'%self.colors[emotion]
@@ -25,9 +30,6 @@ class LedStrip():
 
     def set_brightness(self, value):
         self.brightness = value
-        payload = '{"brightness": %d}'%self.brightness
-        self.client.publish(self.topic + "/set", payload)
-        
 
     def off(self):
         self.client.publish(self.topic + "/set", '{"state": "OFF"}')
@@ -36,6 +38,7 @@ class LedBlinkt():
     def __init__(self):
         self.colors = {"sad": 300, "angry":360, "happy":120, "neutral":60}
         self.hue = None
+        self.brightness = 0
 
     def on(self):
         self.off()
@@ -45,6 +48,7 @@ class LedBlinkt():
                 r, g, b = [int(c * 255) for c in hsv_to_rgb(self.hue/360, 1.0, 1.0)]
                 blinkt.set_pixel(i, r, g, b)
 
+            blinkt.set_brightness(self.brightness/254)
             blinkt.show()
     
     def update_emotion(self, emotion):
@@ -54,8 +58,6 @@ class LedBlinkt():
         
     def set_brightness(self, value):
         self.brightness = value
-        blinkt.set_brightness(self.brightness/254)
-        self.on()
 
     def off(self):
         blinkt.clear()
@@ -77,9 +79,11 @@ def led_room_control(payload, room_nbr):
     global led1
     global led2
 
-    logging.debug(f"led_room_control: room_nbr = {room_nbr}")
 
-    if payload["occupied"]:
+    logging.debug(f"led_room_control: room_nbr = {room_nbr}")
+    global led_control
+
+    if payload["occupied"] and led_control:
         if room_nbr == 1:
             led1.on()
 
@@ -117,7 +121,11 @@ def led_system_control(payload):
     global led1
     global led2
 
-    if payload['on']:
+    global led_control
+
+    led_control = payload['on']
+
+    if led_control:
         led1.on()
         led2.on()
     else:
