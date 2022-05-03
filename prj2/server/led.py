@@ -38,10 +38,11 @@ class LedStrip():
         self.client.publish(led_topic, json.dumps({"room": 2, "on": False}))
 
 class LedBlinkt():
-    def __init__(self):
+    def __init__(self, client):
         self.colors = {"sad": 300, "angry":360, "happy":120, "neutral":60}
         self.hue = None
         self.brightness = 0
+        self.client = client
 
     def on(self):
         self.off()
