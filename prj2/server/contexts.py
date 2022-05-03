@@ -75,6 +75,8 @@ def position_context_updater(client):
 
 		client.publish(position_context, json.dumps(send))
 		update_time(client)
+	except TypeError: 
+		logging.error("Failed to update the position context")
 	finally:
 		threading.Timer(3600*24, lambda: position_context_updater(client)).start()
 
