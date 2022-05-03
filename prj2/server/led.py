@@ -6,7 +6,7 @@ import blinkt
 from colorsys import hsv_to_rgb
 import logging
 
-leds_on = False
+led_control = False
 
 class LedStrip():
     def __init__(self, client, topic):
@@ -17,8 +17,8 @@ class LedStrip():
         self.emotion = None
 
     def on(self):
-        global leds_on
-        if ((self.emotion != None) and leds_on):
+        global led_control
+        if ((self.emotion != None) and led_control):
             self.client.publish(self.topic + "/set", self.emotion)
             self.set_brightness(self.brightness)
         else:
@@ -45,9 +45,9 @@ class LedBlinkt():
     def on(self):
         self.off()
 
-        global leds_on
+        global led_control
 
-        if (self.hue != None and leds_on):
+        if ((self.hue != None) and led_control):
             for i in range(8):
                 r, g, b = [int(c * 255) for c in hsv_to_rgb(self.hue/360, 1.0, 1.0)]
                 blinkt.set_pixel(i, r, g, b)
@@ -124,11 +124,11 @@ def led_system_control(payload):
     global led1
     global led2
 
-    global leds_on
+    global led_control
 
-    leds_on = payload['on']
+    led_control = payload['on']
 
-    if leds_on:
+    if led_control:
         led1.on()
         led2.on()
     else:
