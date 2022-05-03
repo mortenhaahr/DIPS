@@ -5,6 +5,7 @@ from datetime import datetime
 import blinkt
 from colorsys import hsv_to_rgb
 import logging
+import json
 
 led_control = False
 
@@ -22,6 +23,7 @@ class LedStrip():
         
         payload = '{"brightness": %d}'%self.brightness
         self.client.publish(self.topic + "/set", payload)
+        self.client.publish(led_topic, json.dumps({"room": 2, "on": True}))
 
 
     def update_emotion(self, emotion):
@@ -33,6 +35,7 @@ class LedStrip():
 
     def off(self):
         self.client.publish(self.topic + "/set", '{"state": "OFF"}')
+        self.client.publish(led_topic, json.dumps({"room": 2, "on": False}))
 
 class LedBlinkt():
     def __init__(self):
@@ -50,6 +53,7 @@ class LedBlinkt():
 
             blinkt.set_brightness(self.brightness/254)
             blinkt.show()
+            self.client.publish(led_topic, json.dumps({"room": 1, "on": True}))
     
     def update_emotion(self, emotion):
         self.hue = self.colors[emotion]
@@ -62,6 +66,7 @@ class LedBlinkt():
     def off(self):
         blinkt.clear()
         blinkt.show()
+        self.client.publish(led_topic, json.dumps({"room": 1, "on": False}))
 
 
 led1 = None
