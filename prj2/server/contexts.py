@@ -17,9 +17,8 @@ def update_room_context(payload, client, room_nbr):
 	logging.debug(payload)
 
 	try:
-
 		client.publish(room_context + room_nbr + music_playing_context, json.dumps({
-			"music_playing": (system_control["leds_on"] and payload["occupancy"])
+			"music_playing": (system_control["audio_on"] and payload["occupancy"])
 			}))
 
 		client.publish(room_context + room_nbr + occupied_context, json.dumps({
