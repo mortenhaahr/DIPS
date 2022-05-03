@@ -143,7 +143,7 @@ def setup_leds(client):
     global led1
     global led2
 
-    led1 = LedBlinkt()
+    led1 = LedBlinkt(client)
     led2 = LedStrip(client, led_topic + room2)
 
     client.subscribe(datetime_context,      callback=led_brightness_control)
