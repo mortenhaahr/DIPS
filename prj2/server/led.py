@@ -67,7 +67,7 @@ class LedBlinkt():
     def off(self):
         blinkt.clear()
         blinkt.show()
-        self.client.publish(led_topic, json.dumps({"room": 1, "on": False}))
+        self.client.publish(led_topic, json.dumps({"room": "1", "on": False}))
 
 
 led1 = None
@@ -102,7 +102,6 @@ def led_room_control(payload, room_nbr):
 
         elif room_nbr == 2:
             led2.off()
-
 
 
 def led_brightness_control(payload):
