@@ -107,9 +107,10 @@ def main():
                 emotions = map(lambda e: e["emotion"], emotions) # Get the emotion entries
                 emotions = pd.DataFrame(emotions)
                 emotions = emotions.mean(axis=0)
+                dominant_emotion = emotions.idxmax()
                 if __debug__ or True:
                     print(emotions)
-                mqtt_client.publish(json.dumps(emotions.to_dict()))
+                mqtt_client.publish(json.dumps({"emotion": dominant_emotion}))
                 sleep(10)  # Sleep long if face was detected to avoid duplicates
             except TimeoutError as e:
                 print(e)
