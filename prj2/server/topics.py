@@ -18,6 +18,7 @@ position_context 	= context_topic + "position"
 room_context 		= context_topic + "room"
 occupied_context 	= "/occupied"
 music_playing_context 	= "/music_playing"
+lamp_context 		= "/lamp"
 
 system_context 		= context_topic + "system/"
 leds_context 		= system_context + "leds"

@@ -25,8 +25,12 @@ def update_room_context(payload, client, room_nbr):
 		client.publish(room_context + room_nbr + occupied_context, json.dumps({
 			"occupied": payload["occupancy"]
 			}))
-			
 
+		client.publish(room_context + room_nbr + lamp_context, json.dumps({
+			"on": payload["occupancy"]
+			}))
+		
+			
 		update_time(client)
 
 	except KeyError:
