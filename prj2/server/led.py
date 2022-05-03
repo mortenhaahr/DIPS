@@ -18,9 +18,11 @@ class LedStrip():
 
     def on(self):
         global leds_on
-        if (self.emotion != None and leds_on):
+        if ((self.emotion != None) and leds_on):
             self.client.publish(self.topic + "/set", self.emotion)
-        self.set_brightness(self.brightness)
+            self.set_brightness(self.brightness)
+        else:
+            self.off()
 
     def update_emotion(self, emotion):
         self.emotion = '{"color": {"hue": %d, "saturation": 100}}'%self.colors[emotion]
