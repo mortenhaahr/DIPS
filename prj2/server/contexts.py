@@ -89,19 +89,19 @@ def command_context_callback(payload, client):
 		client.publish(leds_context, json.dumps({"on": system_control["leds_on"]}))
 
 	except KeyError:
-		logging.error("The key 'leds_on' was not in the JSON!")	
+		logging.debug("The key 'leds_on' was not in the JSON!")	
 
 	try:
 		system_control["audio_on"] = payload["audio_on"]
 		client.publish(audio_context, json.dumps({"on": system_control["audio_on"]}))
 	except KeyError:
-		logging.error("The key 'audio_on' was not in the JSON!")
+		logging.debug("The key 'audio_on' was not in the JSON!")
 	
 	
 	update_time(client)
 
 def update_led_context(payload, client):
-	logging.info("Update led context")
+	logging.debug("Updating led context")
 	try:
 		client.publish(room_context + payload["room"] + lamp_context, json.dumps({
 		"on": payload["on"]
