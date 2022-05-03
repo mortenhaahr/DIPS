@@ -102,9 +102,12 @@ def command_context_callback(payload, client):
 
 def update_led_context(payload, client):
 	logging.info("Update led context")
-	client.publish(room_context + payload["room"] + lamp_context, json.dumps({
-	"on": payload["on"]
-	}))
+	try:
+		client.publish(room_context + payload["room"] + lamp_context, json.dumps({
+		"on": payload["on"]
+		}))
+	except KeyError:
+		logging.error("Incorrect payload for update_led_context")
 
 
 def init_contexts(client):
