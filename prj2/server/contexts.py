@@ -67,14 +67,16 @@ def time_context_updater(client):
 	threading.Timer(3600, lambda: time_context_updater(client)).start()
 
 def position_context_updater(client):
-	lat, lng = geocoder.ip('me').latlng	
-	send = {
-		"position": f"{lat},{lng}"
-	}
+	try:
+		lat, lng = geocoder.ip('me').latlng	
+		send = {
+			"position": f"{lat},{lng}"
+		}
 
-	client.publish(position_context, json.dumps(send))
-	update_time(client)
-	threading.Timer(3600*24, lambda: position_context_updater(client)).start()
+		client.publish(position_context, json.dumps(send))
+		update_time(client)
+	finally:
+		threading.Timer(3600*24, lambda: position_context_updater(client)).start()
 
 
 def command_context_callback(payload, client):
