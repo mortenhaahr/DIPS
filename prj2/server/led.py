@@ -21,8 +21,9 @@ class LedStrip():
         if (self.emotion != None):
             self.client.publish(self.topic + "/set", self.emotion)
         
-        payload = '{"brightness": %d}'%self.brightness
-        self.client.publish(self.topic + "/set", payload)
+            payload = '{"brightness": %d}'%self.brightness
+            self.client.publish(self.topic + "/set", payload)
+        
         self.client.publish(led_topic, json.dumps({"room": 2, "on": True}))
 
 
@@ -45,7 +46,7 @@ class LedBlinkt():
         self.client = client
 
     def on(self):
-        self.off()
+        #self.off()
 
         if (self.hue != None):
             for i in range(8):

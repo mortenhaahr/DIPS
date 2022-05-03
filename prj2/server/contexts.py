@@ -25,11 +25,6 @@ def update_room_context(payload, client, room_nbr):
 		client.publish(room_context + room_nbr + occupied_context, json.dumps({
 			"occupied": payload["occupancy"]
 			}))
-
-		client.publish(room_context + room_nbr + lamp_context, json.dumps({
-			"on": payload["occupancy"]
-			}))
-		
 			
 		update_time(client)
 
@@ -105,12 +100,19 @@ def command_context_callback(payload, client):
 	
 	update_time(client)
 
+def update_led_context(payload, client):
+	logging.info("Update led context")
+	client.publish(room_context + payload["room"] + lamp_context, json.dumps({
+	"on": payload["on"]
+	}))
+
 
 def init_contexts(client):
 	client.subscribe(command_topic, 	callback=lambda payload: command_context_callback(payload, client))
 	client.subscribe(emotion_topic, 	callback=lambda payload: update_emotion_callback(payload, client))
 	client.subscribe(pir_topic + room1, callback=lambda payload: update_room_context(payload, client, "1"))
 	client.subscribe(pir_topic + room2, callback=lambda payload: update_room_context(payload, client, "2"))
+	client.subscribe(led_topic, 		callback=lambda payload: update_led_context(payload, client))
 
 	time_context_updater(client)
 	position_context_updater(client)
