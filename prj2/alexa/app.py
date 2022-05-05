@@ -1,10 +1,12 @@
-from cgitb import text
+#!/usr/bin/env python3
+
 from flask import Flask, request
 import json
 from mqtt_callback_client import MQTTCallbackClient
 import socket
 import threading
 import logging
+import subprocess
 
 base_topic = "pi_server"
 client = None
@@ -256,6 +258,20 @@ def mood_controller():
     command_type = data["request"]["type"]
     invocation = request_types.get(command_type, default_command)
     return json.dumps(invocation(data["request"]))
+
+
+def send_alexa_command(cmd, device="MortenEchoDot"):
+    output = subprocess.run(
+        [
+            "alexa_remote_control.sh",
+            "-d",
+            device,
+            "-e",
+            f"textcommand: {cmd}",
+        ],
+        capture_output=True,
+    )
+    return output
 
 
 if __name__ == "__main__":
