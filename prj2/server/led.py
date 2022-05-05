@@ -94,17 +94,17 @@ def led_room_control(payload, room_nbr):
     led_occupancy['room' + room_nbr] = payload["occupied"];
 
     if led_occupancy['room' + room_nbr] and led_control:
-        if room_nbr == 1:
+        if room_nbr == "1":
             led1.on()
 
-        elif room_nbr == 2:
+        elif room_nbr == "2":
             led2.on()
         
     else:
-        if room_nbr == 1:
+        if room_nbr == "1":
             led1.off()
 
-        elif room_nbr == 2:
+        elif room_nbr == "2":
             led2.off()
 
 
