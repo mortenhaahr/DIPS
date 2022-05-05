@@ -95,9 +95,11 @@ class Speaker():
     def system_Callback(self, payload):
         global emotion
         if payload["audio_on"] == True:
+            print("Start playing in both rooms \n")
             #Start smart speaker
             pygame.mixer.music.play(-1)
         elif payload["audio_on"] == False:
+            print("Stop playing in both rooms \n")
             self.stopMusic(1)
             self.stopMusic(2)
 
