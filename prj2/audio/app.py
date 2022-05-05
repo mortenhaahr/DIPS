@@ -323,6 +323,11 @@ def help_handler(intent):
         "I can help you with managing your smart home. With my help you can manage your emotion, see if any of the rooms are occupied, and check the status of the lights."
     )
 
+def stop_music(intent):
+    global client
+    send_alexa_command("stop the music")
+    client.publish(f"{base_topic}/audio/commands", json.dumps({"audio_on": False}))
+    return create_basic_text_response("All right. Stopping the music.", end_session=True)
 
 def intent_handler(data_request):
     intents_callbacks = {
@@ -330,6 +335,7 @@ def intent_handler(data_request):
         "get_emotion": get_emotion_callback,
         "get_room_occupied": get_room_occupied,
         "get_lamp_status_no_room_number": get_lamp_status_no_room_number,
+        "stop_music": stop_music,
         "AMAZON.YesIntent": yes_handler,
         "AMAZON.NoIntent": no_handler,
         "AMAZON.HelpIntent": help_handler,
