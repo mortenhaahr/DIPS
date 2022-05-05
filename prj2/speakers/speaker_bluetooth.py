@@ -106,7 +106,7 @@ class Speaker():
         client.subscribe("pi_server/context/emotion", callback=self.emotion_callback,qos=1)
         client.subscribe("pi_server/context/room" + "1" + "/music_playing", callback=lambda payload: self.room_callback(payload, 1))
         client.subscribe("pi_server/context/room" + "2" + "/music_playing", callback=lambda payload: self.room_callback(payload, 2))
-        client.subscribe("pi_server/context/system/audio", callback=self.system_Calback,qos=1)
+        client.subscribe("pi_server/context/system/audio", callback=self.system_Callback,qos=1)
 
 
 def main():
