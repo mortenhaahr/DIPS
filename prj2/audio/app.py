@@ -53,7 +53,7 @@ class Speaker():
 
     def stopMusic(self,roomNr):
         def wait_and_stop():
-            time.sleep(1) # Wait a little bit so we don't interrupt the lady
+            time.sleep(2) # Wait a little bit so we don't interrupt the lady
             send_alexa_command("stop the music")
         if roomNr == 1:
             threading.Thread(target=wait_and_stop).start()
@@ -68,7 +68,7 @@ class Speaker():
         def wait_and_play(emotion):
             time.sleep(3) # Wait a little bit so we don't interrupt the lady
             if emotion == "neutral":
-                send_alexa_command("play favorite songs")
+                send_alexa_command("play my library songs")
             else:
                 send_alexa_command(f"play {emotion} music")
 
@@ -107,24 +107,10 @@ class Speaker():
         else:
             self.stopMusic(roomNr)
 
-    #tænd og sluk begge rum
-    def system_Callback(self, topic, payload):
-        global emotion
-        if payload["on"] == True:
-            logging.info("Start playing in both rooms \n")
-            self.playMusic(emotion, 1)
-            self.playMusic(emotion, 2)
-        elif payload["on"] == False:
-            logging.info("Stop playing in both rooms \n")
-            self.stopMusic(1)
-            self.stopMusic(2)
-
-
     def setupTopics(self,client):
         client.subscribe("pi_server/context/emotion", callback=self.emotion_callback,qos=1)
         client.subscribe("pi_server/context/room" + "1" + "/music_playing", callback=lambda topic, payload: self.room_callback(topic, payload, 1))
         client.subscribe("pi_server/context/room" + "2" + "/music_playing", callback=lambda topic, payload: self.room_callback(topic, payload, 2))
-        client.subscribe("pi_server/context/system/audio", callback=self.system_Callback,qos=1)
 
 
 base_topic = "pi_server"
