@@ -52,9 +52,11 @@ class Speaker():
         pygame.mixer.music.load(file)
 
     def stopMusic(self,roomNr):
-        if roomNr == 1:
+        def wait_and_stop():
             time.sleep(1) # Wait a little bit so we don't interrupt the lady
             send_alexa_command("stop the music")
+        if roomNr == 1:
+            threading.Thread(target=wait_and_stop).start()
             self.room1_playing = False
         elif roomNr == 2:
             self.room2_playing = False
@@ -63,18 +65,21 @@ class Speaker():
             logging.info("stopMusic: Unknown roomNr")
 
     def playMusic(self, emotion, roomNr):
+        def wait_and_play(emotion):
+            time.sleep(3) # Wait a little bit so we don't interrupt the lady
+            if emotion == "neutral":
+                send_alexa_command("play favorite songs")
+            else:
+                send_alexa_command(f"play {emotion} music")
+
         if emotion == None:
             logging.warning("Emotion is undefined")
             return
         if roomNr == 1:
-            time.sleep(1) # Wait a little bit so we don't interrupt the lady
             if self.room1_playing == False:
                 self.room1_playing = True
                 logging.debug("Playing in room 1")
-                if emotion == "neutral":
-                    send_alexa_command("play favorite songs")
-                else:
-                    send_alexa_command(f"play {emotion} music")
+                threading.Thread(target=lambda: wait_and_play(emotion)).start()
         elif roomNr == 2:
             if self.room2_playing == False:
                 self.room2_playing = True
