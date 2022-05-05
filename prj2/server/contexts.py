@@ -104,7 +104,7 @@ def command_context_callback(payload, client):
 
 		update_room_context(occupations["room1"], client, "1")
 		update_room_context(occupations["room2"], client, "2")
-		
+
 	except KeyError:
 		logging.debug("The key 'audio_on' was not in the JSON!")
 	

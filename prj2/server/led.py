@@ -91,9 +91,9 @@ def led_room_control(payload, room_nbr):
     logging.debug(f"led_room_control: room_nbr = {room_nbr}")
     global led_control
 
-    led_occupancy['room' + room_nbr] = payload["occupied"];
+    led_occupancy['room' + str(room_nbr)] = payload["occupied"];
 
-    if led_occupancy['room' + room_nbr] and led_control:
+    if led_occupancy['room' + str(room_nbr)] and led_control:
         if room_nbr == 1:
             led1.on()
 
