@@ -25,8 +25,9 @@ class Speaker():
                     "Room2": "Livingroom"}
         self.song = {"sad": 'Tammy-Stan-Devereaux.mp3', 
                     "happy": 'Pharrell-Williams-Happy-f7.mp3',
-                    "angry": 'tbd',
-                    "neutral": 'tbd'}
+                    "angry": 'arthur-vyncke-cherry-metal.mp3', #Cherry Metal by Arthur Vyncke | https://soundcloud.com/arthurvost Creative Commons Attribution-ShareAlike 3.0 Unported https://creativecommons.org/licenses/by-sa/3.0/deed.en_US Music promoted by https://www.chosic.com/free-music/all/ 
+                    "neutral": 'Illusions.mp3'} #Illusions by Keys of Moon | https://soundcloud.com/keysofmoon Music promoted by https://www.chosic.com/free-music/all/ Creative Commons CC BY 4.0 https://creativecommons.org/licenses/by/4.0/
+ 
         pygame.mixer.init()
         pygame.mixer.music.load(self.song["happy"])  
         
@@ -94,11 +95,11 @@ class Speaker():
     #tænd og sluk begge rum
     def system_Callback(self, payload):
         global emotion
-        if payload["audio_on"] == True:
+        if payload["on"] == True:
             print("Start playing in both rooms \n")
             #Start smart speaker
             pygame.mixer.music.play(-1)
-        elif payload["audio_on"] == False:
+        elif payload["on"] == False:
             print("Stop playing in both rooms \n")
             self.stopMusic(1)
             self.stopMusic(2)
