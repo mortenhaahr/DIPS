@@ -107,24 +107,10 @@ class Speaker():
         else:
             self.stopMusic(roomNr)
 
-    #tænd og sluk begge rum
-    def system_Callback(self, topic, payload):
-        global emotion
-        if payload["on"] == True:
-            logging.info("Start playing in both rooms \n")
-            self.playMusic(emotion, 1)
-            self.playMusic(emotion, 2)
-        elif payload["on"] == False:
-            logging.info("Stop playing in both rooms \n")
-            self.stopMusic(1)
-            self.stopMusic(2)
-
-
     def setupTopics(self,client):
         client.subscribe("pi_server/context/emotion", callback=self.emotion_callback,qos=1)
         client.subscribe("pi_server/context/room" + "1" + "/music_playing", callback=lambda topic, payload: self.room_callback(topic, payload, 1))
         client.subscribe("pi_server/context/room" + "2" + "/music_playing", callback=lambda topic, payload: self.room_callback(topic, payload, 2))
-        client.subscribe("pi_server/context/system/audio", callback=self.system_Callback,qos=1)
 
 
 base_topic = "pi_server"
