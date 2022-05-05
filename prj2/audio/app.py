@@ -57,6 +57,9 @@ class Speaker():
             logging.info("stopMusic: Unknown roomNr")
 
     def playMusic(self, emotion, roomNr):
+        if emotion == None:
+            logging.warning("Emotion is undefined")
+            return
         if roomNr == 1:
             logging.debug("Playing in room 1")
             self.stopMusic(roomNr=2)

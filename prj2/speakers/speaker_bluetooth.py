@@ -48,25 +48,16 @@ class Speaker():
             print("Playing in room 1")
             self.stopMusic(roomNr=2)
             #play on smart speaker
+            if emotion == "neutral":
+                pass #Play "liked songs"
+            else:
+                pass #Play "emotion music"
         elif roomNr == 2:
             print("Playing in room 2")
             self.stopMusic(roomNr=1)
             pygame.mixer.music.play(loops=-1)  
         else:
             print("playMusic: Unknown roomNr")
-
-    """ def connectToRoom(self, roomNr):
-        if roomNr == 1:
-            print("Connecting to Smart speaker")
-            #Connect here
-            print("Stop playing music from ",self.Mac)
-            self.stopMusic()
-        elif roomNr == 2:
-            print("Playing from ",self.Mac)
-            #self.conn.connect(self.Mac)
-            print("Stop playing from Smart speaker")
-        else:
-            print("Invalid room Nr") """
 
     def updatePlayStatus(self):
         self.playing = pygame.mixer.music.get_busy()
@@ -87,7 +78,6 @@ class Speaker():
         playing = payload['music_playing']
         print("Room Calback for room: ",roomNr)
         if playing == True:
-            #self.connectToRoom(roomNr)
             self.playMusic(emotion,roomNr)
         else:
             self.stopMusic(roomNr)
