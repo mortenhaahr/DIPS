@@ -68,7 +68,7 @@ class Speaker():
         def wait_and_play(emotion):
             time.sleep(3) # Wait a little bit so we don't interrupt the lady
             if emotion == "neutral":
-                send_alexa_command("play favorite songs")
+                send_alexa_command("play my library songs")
             else:
                 send_alexa_command(f"play {emotion} music")
 
