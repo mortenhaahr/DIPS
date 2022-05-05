@@ -11,13 +11,26 @@ import subprocess
 from mqtt_callback_client import MQTTCallbackClient
 import pygame
 
+def send_alexa_command(cmd, device="MortenEchoDot"):
+    output = subprocess.run(
+        [
+            "alexa_remote_control.sh",
+            "-d",
+            device,
+            "-e",
+            f"textcommand: {cmd}",
+        ],
+        capture_output=True,
+    )
+    return output
+
+
 client = None
 emotion = None
 room = None
 
 class Speaker():
-    def __init__(self):#, client):
-        #self.client = client
+    def __init__(self):
         self.playing = False
         self.Mac = "00:58:50:1D:B3:35"
         self.connected = False
@@ -37,8 +50,7 @@ class Speaker():
 
     def stopMusic(self,roomNr):
         if roomNr == 1:
-            #Stop music on smart speaker
-            pass
+            send_alexa_command("stop the music")
         elif roomNr == 2:
             pygame.mixer.music.stop()
         else:
@@ -46,11 +58,14 @@ class Speaker():
 
     def playMusic(self, emotion, roomNr):
         if roomNr == 1:
-            logging.info("Playing in room 1")
+            logging.debug("Playing in room 1")
             self.stopMusic(roomNr=2)
-            #play on smart speaker
+            if emotion == "neutral":
+                send_alexa_command("play favorite songs")
+            else:
+                send_alexa_command(f"play {emotion} music")
         elif roomNr == 2:
-            logging.info("Playing in room 2")
+            logging.debug("Playing in room 2")
             self.stopMusic(roomNr=1)
             pygame.mixer.music.play(loops=-1)  
         else:
@@ -63,19 +78,14 @@ class Speaker():
     def emotion_callback(self, topic, payload):
         global emotion
         emotion = payload['emotion']
-        logging.info("emotionCallback \n")
-        if self.song[emotion] == 'tbd':
-            logging.info('No song implemented yet \n Loading happy \n')
-            self.loadMusic(self.song['happy'])
-        else:
-            self.loadMusic(self.song[emotion])
+        logging.debug("emotionCallback \n")
+        self.loadMusic(self.song[emotion])
 
     def room_callback(self, topic, payload, roomNr):
         global emotion
         playing = payload['music_playing']
-        logging.info(f"Room Calback for room: {roomNr}")
+        logging.debug(f"Room Calback for room: {roomNr}")
         if playing == True:
-            #self.connectToRoom(roomNr)
             self.playMusic(emotion,roomNr)
         else:
             self.stopMusic(roomNr)
@@ -85,7 +95,10 @@ class Speaker():
         global emotion
         if payload["on"] == True:
             logging.info("Start playing in both rooms \n")
-            #Start smart speaker
+            if emotion == "neutral":
+                send_alexa_command("play favorite songs")
+            else:
+                send_alexa_command(f"play {emotion} music")
             pygame.mixer.music.play(-1)
         elif payload["on"] == False:
             logging.info("Stop playing in both rooms \n")
@@ -349,20 +362,6 @@ def mood_controller():
     command_type = data["request"]["type"]
     invocation = request_types.get(command_type, default_command)
     return json.dumps(invocation(data["request"]))
-
-
-def send_alexa_command(cmd, device="MortenEchoDot"):
-    output = subprocess.run(
-        [
-            "alexa_remote_control.sh",
-            "-d",
-            device,
-            "-e",
-            f"textcommand: {cmd}",
-        ],
-        capture_output=True,
-    )
-    return output
 
 def main():
     global client
