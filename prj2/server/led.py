@@ -135,8 +135,8 @@ def led_system_control(payload):
 
     led_control = payload['on']
 
-    led_room_control(led_occupancy["room1"], "1");
-    led_room_control(led_occupancy["room2"], "2");
+    led_room_control({"occupied": led_occupancy["room1"]}, "1");
+    led_room_control({"occupied": led_occupancy["room2"]}, "2");
 
 
 def setup_leds(client):
