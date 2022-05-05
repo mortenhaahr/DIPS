@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+from concurrent.futures import thread
+import time
 from flask import Flask, request
 import json
 from mqtt_callback_client import MQTTCallbackClient
@@ -101,13 +103,11 @@ class Speaker():
     #tænd og sluk begge rum
     def system_Callback(self, topic, payload):
         global emotion
+        time.sleep(1) # Wait a little bit so we don't interrupt the lady
         if payload["on"] == True:
             logging.info("Start playing in both rooms \n")
-            if emotion == "neutral":
-                send_alexa_command("play favorite songs")
-            else:
-                send_alexa_command(f"play {emotion} music")
-            pygame.mixer.music.play(-1)
+            self.playMusic(emotion, 1)
+            self.playMusic(emotion, 2)
         elif payload["on"] == False:
             logging.info("Stop playing in both rooms \n")
             self.stopMusic(1)
@@ -332,8 +332,11 @@ def help_handler(intent):
     )
 
 def stop_music(intent):
+    def wait_and_stop():
+        time.sleep(1)
+        send_alexa_command("stop the music")
     global client
-    send_alexa_command("stop the music")
+    threading.Thread(target=wait_and_stop).start()
     client.publish(f"{base_topic}/audio/commands", json.dumps({"audio_on": False}))
     return create_basic_text_response("All right. Stopping the music.", end_session=True)
 
