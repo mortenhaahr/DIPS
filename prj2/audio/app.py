@@ -53,7 +53,7 @@ class Speaker():
 
     def stopMusic(self,roomNr):
         def wait_and_stop():
-            time.sleep(1) # Wait a little bit so we don't interrupt the lady
+            time.sleep(2) # Wait a little bit so we don't interrupt the lady
             send_alexa_command("stop the music")
         if roomNr == 1:
             threading.Thread(target=wait_and_stop).start()
