@@ -91,10 +91,22 @@ class Speaker():
         else:
             self.stopMusic(roomNr)
 
+    #tænd og sluk begge rum
+    def system_Callback(self, payload):
+        global emotion
+        if payload["audio_on"] == True:
+            #Start smart speaker
+            pygame.mixer.music.play(-1)
+        elif payload["audio_on"] == False:
+            self.stopMusic(1)
+            self.stopMusic(2)
+
+
     def setupTopics(self,client):
         client.subscribe("pi_server/context/emotion", callback=self.emotion_callback,qos=1)
         client.subscribe("pi_server/context/room" + "1" + "/music_playing", callback=lambda payload: self.room_callback(payload, 1))
         client.subscribe("pi_server/context/room" + "2" + "/music_playing", callback=lambda payload: self.room_callback(payload, 2))
+        client.subscribe("pi_server/context/system/audio", callback=self.system_Calback,qos=1)
 
 
 def main():
@@ -103,8 +115,8 @@ def main():
 	    level=logging.INFO, format="%(asctime)s : %(levelname)s:  %(message)s"
 	)
     #Setup mqtt
-    #pi_ip = socket.gethostbyname("rpi-server.local")
-    pi_ip = "192.168.143.239"   #server
+    pi_ip = socket.gethostbyname("rpi-server.local")
+    #pi_ip = "192.168.143.239"   #server
     
 
     #Setup client
