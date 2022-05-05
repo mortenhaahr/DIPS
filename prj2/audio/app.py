@@ -53,6 +53,7 @@ class Speaker():
 
     def stopMusic(self,roomNr):
         if roomNr == 1:
+            time.sleep(1) # Wait a little bit so we don't interrupt the lady
             send_alexa_command("stop the music")
             self.room1_playing = False
         elif roomNr == 2:
@@ -66,6 +67,7 @@ class Speaker():
             logging.warning("Emotion is undefined")
             return
         if roomNr == 1:
+            time.sleep(1) # Wait a little bit so we don't interrupt the lady
             if self.room1_playing == False:
                 self.room1_playing = True
                 logging.debug("Playing in room 1")
@@ -103,7 +105,6 @@ class Speaker():
     #tænd og sluk begge rum
     def system_Callback(self, topic, payload):
         global emotion
-        time.sleep(1) # Wait a little bit so we don't interrupt the lady
         if payload["on"] == True:
             logging.info("Start playing in both rooms \n")
             self.playMusic(emotion, 1)
