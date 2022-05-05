@@ -12,17 +12,24 @@ system_control = {
 	"audio_on": False
 }
 
+occupations = {
+	"room1": False,
+	"room2": False
+}
+
 def update_room_context(payload, client, room_nbr):
 	global system_control
+	global occupations
 	logging.debug(payload)
 
 	try:
+		occupations["room" + room_nbr] = payload["occupancy"]
 		client.publish(room_context + room_nbr + music_playing_context, json.dumps({
-			"music_playing": (system_control["audio_on"] and payload["occupancy"])
+			"music_playing": (system_control["audio_on"] and occupations["room" + room_nbr])
 			}))
 
 		client.publish(room_context + room_nbr + occupied_context, json.dumps({
-			"occupied": payload["occupancy"]
+			"occupied": occupations["room" + room_nbr]
 			}))
 			
 		update_time(client)
@@ -81,6 +88,7 @@ def position_context_updater(client):
 
 def command_context_callback(payload, client):
 	global system_control
+	global occupations
 	logging.debug(payload)
 
 	try:
@@ -94,12 +102,8 @@ def command_context_callback(payload, client):
 		system_control["audio_on"] = payload["audio_on"]
 		client.publish(audio_context, json.dumps({"on": system_control["audio_on"]}))
 
-		client.publish(room_context + "1" + music_playing_context, json.dumps({
-			"music_playing": system_control["audio_on"]
-			}))
-		client.publish(room_context + "2" + music_playing_context, json.dumps({
-			"music_playing": system_control["audio_on"]
-			}))
+		update_room_context(occupations["room1"], client, "1")
+		update_room_context(occupations["room2"], client, "2")
 	except KeyError:
 		logging.debug("The key 'audio_on' was not in the JSON!")
 	
