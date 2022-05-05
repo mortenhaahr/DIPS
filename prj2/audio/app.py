@@ -31,7 +31,8 @@ room = None
 
 class Speaker():
     def __init__(self):
-        self.playing = False
+        self.room1_playing = False
+        self.room2_playing = False
         self.Mac = "00:58:50:1D:B3:35"
         self.connected = False
         
@@ -51,7 +52,9 @@ class Speaker():
     def stopMusic(self,roomNr):
         if roomNr == 1:
             send_alexa_command("stop the music")
+            self.room1_playing = False
         elif roomNr == 2:
+            self.room2_playing = False
             pygame.mixer.music.stop()
         else:
             logging.info("stopMusic: Unknown roomNr")
@@ -61,16 +64,18 @@ class Speaker():
             logging.warning("Emotion is undefined")
             return
         if roomNr == 1:
-            logging.debug("Playing in room 1")
-            self.stopMusic(roomNr=2)
-            if emotion == "neutral":
-                send_alexa_command("play favorite songs")
-            else:
-                send_alexa_command(f"play {emotion} music")
+            if self.room1_playing == False:
+                self.room1_playing = True
+                logging.debug("Playing in room 1")
+                if emotion == "neutral":
+                    send_alexa_command("play favorite songs")
+                else:
+                    send_alexa_command(f"play {emotion} music")
         elif roomNr == 2:
-            logging.debug("Playing in room 2")
-            self.stopMusic(roomNr=1)
-            pygame.mixer.music.play(loops=-1)  
+            if self.room2_playing == False:
+                self.room2_playing = True
+                logging.debug("Playing in room 2")
+                pygame.mixer.music.play(loops=-1)  
         else:
             logging.info("playMusic: Unknown roomNr")
 
