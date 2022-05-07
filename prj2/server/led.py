@@ -111,15 +111,15 @@ def led_room_control(payload, room_nbr):
 def led_brightness_control(payload):
     global led1
     global led2
-    brightness = 0
+    brightness = 254
 
     curr_time = datetime.strptime(payload["datetime"], "%d/%m/%Y %H:%M:%S")
 
-    if curr_time.hour < 12:
-        brightness = 254 - (curr_time.hour * (254/12))
+#    if curr_time.hour < 12:
+#        brightness = 254 - (curr_time.hour * (200/12))
     
-    if curr_time.hour >= 12:
-        brightness = ((curr_time.hour - 12) * (254/12))
+#    if curr_time.hour >= 12:
+#        brightness = ((curr_time.hour - 12) * (200/12)) + 54
 
     logging.debug(f"brightness: {brightness}")
 
