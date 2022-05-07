@@ -102,10 +102,10 @@ class Speaker():
         # Check if music is already playing
         if self.room1_playing == True:
             self.room1_playing = False
-            self.playMusic(roomNr=1)
+            self.playMusic(emotion=emotion,roomNr=1)
         elif self.room2_playing == True:
             self.room2_playing = False
-            self.playMusic(roomNr=2)
+            self.playMusic(emotion=emotion,roomNr=2)
 
     def room_callback(self, topic, payload, roomNr):
         global emotion
