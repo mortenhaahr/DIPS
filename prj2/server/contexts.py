@@ -43,6 +43,8 @@ def update_emotion_callback(payload, client):
 
 	try:
 		emotion = payload['emotion']
+		if (emotion not in ("happy","sad","neutral","angry")):
+			raise ValueError
 
 		to_send = {
 			"emotion": emotion
