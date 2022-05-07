@@ -53,7 +53,7 @@ class Speaker():
 
     def stopMusic(self,roomNr):
         def wait_and_stop():
-            time.sleep(2) # Wait a little bit so we don't interrupt the lady
+            # time.sleep(2) # Wait a little bit so we don't interrupt the lady
             send_alexa_command("stop the music")
         if roomNr == 1:
             threading.Thread(target=wait_and_stop).start()
@@ -66,7 +66,7 @@ class Speaker():
 
     def playMusic(self, emotion, roomNr):
         def wait_and_play(emotion):
-            time.sleep(3) # Wait a little bit so we don't interrupt the lady
+            # time.sleep(3) # Wait a little bit so we don't interrupt the lady
             if emotion == "neutral":
                 send_alexa_command("play my library songs")
             else:
@@ -325,7 +325,7 @@ def help_handler(intent):
 
 def stop_music(intent):
     def wait_and_stop():
-        time.sleep(1)
+        # time.sleep(1)
         send_alexa_command("stop the music")
     global client
     threading.Thread(target=wait_and_stop).start()
