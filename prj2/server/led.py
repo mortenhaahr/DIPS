@@ -8,6 +8,10 @@ import logging
 import json
 
 led_control = False
+led_occupancy = {
+    "room1" : False,
+    "room2" : False
+}
 
 class LedStrip():
     def __init__(self, client, topic):
@@ -26,10 +30,8 @@ class LedStrip():
         
             self.client.publish(led_topic, json.dumps({"room": "2", "on": True}))
 
-
     def update_emotion(self, emotion):
         self.emotion = '{"color": {"hue": %d, "saturation": 100}}'%self.colors[emotion]
-        self.on()
 
     def set_brightness(self, value):
         self.brightness = value
@@ -46,7 +48,6 @@ class LedBlinkt():
         self.client = client
 
     def on(self):
-        #self.off()
 
         if (self.hue != None):
             for i in range(8):
@@ -59,8 +60,6 @@ class LedBlinkt():
     
     def update_emotion(self, emotion):
         self.hue = self.colors[emotion]
-        self.on()
-
         
     def set_brightness(self, value):
         self.brightness = value
@@ -86,22 +85,26 @@ def led_room_control(payload, room_nbr):
     global led1
     global led2
 
+    global led_occupancy
+
 
     logging.debug(f"led_room_control: room_nbr = {room_nbr}")
     global led_control
 
-    if payload["occupied"] and led_control:
-        if room_nbr == 1:
+    led_occupancy['room' + room_nbr] = payload["occupied"];
+
+    if led_occupancy['room' + room_nbr] and led_control:
+        if room_nbr == "1":
             led1.on()
 
-        elif room_nbr == 2:
+        elif room_nbr == "2":
             led2.on()
         
     else:
-        if room_nbr == 1:
+        if room_nbr == "1":
             led1.off()
 
-        elif room_nbr == 2:
+        elif room_nbr == "2":
             led2.off()
 
 
@@ -128,15 +131,12 @@ def led_system_control(payload):
     global led2
 
     global led_control
+    global led_occupancy
 
     led_control = payload['on']
 
-    if led_control:
-        led1.on()
-        led2.on()
-    else:
-        led1.off()
-        led2.off()
+    led_room_control({"occupied": led_occupancy["room1"]}, "1");
+    led_room_control({"occupied": led_occupancy["room2"]}, "2");
 
 
 def setup_leds(client):
@@ -147,7 +147,7 @@ def setup_leds(client):
     led2 = LedStrip(client, led_topic + room2)
 
     client.subscribe(datetime_context,      callback=led_brightness_control)
-    client.subscribe(room_context + "1" + occupied_context,    callback=lambda payload: led_room_control(payload, 1))
-    client.subscribe(room_context + "2" + occupied_context,    callback=lambda payload: led_room_control(payload, 2))
+    client.subscribe(room_context + "1" + occupied_context,    callback=lambda payload: led_room_control(payload, "1"))
+    client.subscribe(room_context + "2" + occupied_context,    callback=lambda payload: led_room_control(payload, "2"))
     client.subscribe(emotion_context,       callback=led_new_emotion)
     client.subscribe(leds_context,        callback=led_system_control)

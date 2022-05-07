@@ -102,8 +102,9 @@ def command_context_callback(payload, client):
 		system_control["audio_on"] = payload["audio_on"]
 		client.publish(audio_context, json.dumps({"on": system_control["audio_on"]}))
 
-		update_room_context(occupations["room1"], client, "1")
-		update_room_context(occupations["room2"], client, "2")
+		update_room_context({"occupancy": occupations["room1"]}, client, "1")
+		update_room_context({"occupancy": occupations["room2"]}, client, "2")
+
 	except KeyError:
 		logging.debug("The key 'audio_on' was not in the JSON!")
 	
