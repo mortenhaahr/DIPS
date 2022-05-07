@@ -103,7 +103,7 @@ class Speaker():
         if self.room1_playing == True:
             self.room1_playing = False
             self.playMusic(emotion=emotion,roomNr=1)
-        elif self.room2_playing == True:
+        if self.room2_playing == True:
             self.room2_playing = False
             self.playMusic(emotion=emotion,roomNr=2)
 
