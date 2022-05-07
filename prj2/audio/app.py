@@ -94,9 +94,18 @@ class Speaker():
         
     def emotion_callback(self, topic, payload):
         global emotion
+        if emotion == payload['emotion']:
+            return
         emotion = payload['emotion']
         logging.debug("emotionCallback \n")
         self.loadMusic(self.song[emotion])
+        # Check if music is already playing
+        if self.room1_playing == True:
+            self.room1_playing = False
+            self.playMusic(roomNr=1)
+        elif self.room2_playing == True:
+            self.room2_playing = False
+            self.playMusic(roomNr=2)
 
     def room_callback(self, topic, payload, roomNr):
         global emotion
