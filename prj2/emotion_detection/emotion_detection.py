@@ -99,7 +99,7 @@ def main():
     while True:
         frame = get_frame(video_capture)
         face_detected = detect_face(frame)
-        if __debug__:
+        if __debug__ or True:
             print(f"face: {face_detected}")
         if face_detected:
             try:
@@ -111,7 +111,7 @@ def main():
                 if __debug__ or True:
                     print(emotions)
                 mqtt_client.publish(json.dumps({"emotion": dominant_emotion}))
-                sleep(10)  # Sleep long if face was detected to avoid duplicates
+                sleep(2)  # Sleep long if face was detected to avoid duplicates
             except TimeoutError as e:
                 print(e)
         sleep(0.1)
