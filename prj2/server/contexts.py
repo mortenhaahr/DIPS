@@ -24,6 +24,7 @@ def update_room_context(payload, client, room_nbr):
 
 	try:
 		occupations["room" + room_nbr] = payload["occupancy"]
+		
 		client.publish(room_context + room_nbr + music_playing_context, json.dumps({
 			"music_playing": (system_control["audio_on"] and occupations["room" + room_nbr])
 			}))
