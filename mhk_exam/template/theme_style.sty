@@ -1,0 +1,55 @@
+\usetheme[titleformat=allsmallcaps,numbering=fraction]{metropolis}
+
+\definecolor{auBlue}{HTML}{003D85}
+\definecolor{auRed}{HTML}{6F1A45}
+\definecolor{auBlack}{HTML}{333333}
+\definecolor{auPink}{HTML}{FF72BD}
+\definecolor{auWhite}{HTML}{F5F5F5}
+
+
+\setbeamercolor{normal text}{fg=auBlack, bg=auWhite}
+\setbeamercolor{alerted text}{fg=auRed}
+\setbeamercolor{example text}{fg=auPink}
+\setbeamercolor{progress bar}{fg=auBlue,bg=auBlue!50!black!30}
+\setbeamercolor{title separator}{use=progress bar,parent=progress bar}
+\setbeamercolor{palette primary}{fg=auWhite,bg=auBlue}
+
+% \setbeamertemplate{footline}[text line]{%
+%   \parbox{\linewidth}{\vspace*{-8pt}\includegraphics[width=1cm]{figs/aulogo_small.png}\hfill Morten Haahr Kristensen\hfill\insertpagenumber}}
+% \setbeamertemplate{navigation symbols}{}
+\def\logoindent{.2cm}
+\def\logosize{4.5ex}
+\def\logo{%
+\resizebox{!}{\logosize}{\includegraphics{figs/aulogo_small.png}}
+}
+
+\defbeamertemplate*{footline}{example theme}
+{%
+    \begin{beamercolorbox}[wd=\paperwidth,ht=\logosize,dp=1.5ex,%
+        leftskip=\logoindent,rightskip=\logoindent plus1fil]{separation line}
+        \usebeamerfont{section in head/foot}%
+        \logo\hfill\insertshorttitle\hfill\insertshortauthor
+    \end{beamercolorbox}
+}
+
+\setbeamertemplate{studentid}{
+    \vspace*{0.2em}
+    \scriptsize{Student ID: \studentid}%
+    \par%
+}
+
+\setbeamertemplate{title page}{
+  \begin{minipage}[b][\paperheight]{\textwidth}
+    \ifx\inserttitlegraphic\@empty\else\usebeamertemplate*{title graphic}\fi
+    \vfill%
+    \ifx\inserttitle\@empty\else\usebeamertemplate*{title}\fi
+    \ifx\insertsubtitle\@empty\else\usebeamertemplate*{subtitle}\fi
+    \usebeamertemplate*{title separator}
+    \ifx\beamer@shortauthor\@empty\else\usebeamertemplate*{author}\fi
+    \ifx\insertdate\@empty\else\usebeamertemplate*{date}\fi
+    \ifx\insertinstitute\@empty\else\usebeamertemplate*{institute}\fi
+    \ifx\beamer@studentid\@empty\else\usebeamertemplate*{studentid}\fi
+    \vfill
+    \vspace*{1mm}
+  \end{minipage}
+}
