@@ -69,6 +69,18 @@ $(N-1) + (N-2) ... (N-(N-1)) = \textbf{(N-1)*N/2}$ since $(1 + (N-1))$ = N. This
 
 This equals: O(N*N/2) Which in big O is: O(N^2)
 
+For dummies:
+- System of N = 5 processes.
+- P0 sends to 4 others. (N-1)
+- P1 sends to 3 others. (N-2)
+- P2 sends to 2 others. (N-3)
+- P3 sends to 1 others. (N-4)
+- P4 sends to 0 others. (N-5) = N-N.
+  
+Comparison:
+- 4+3+2+1 = 10.
+- $\frac{(N-1)*N}{2} = \frac{N*N-N}{2} = \frac{5^2 - 5}{2} = 20/2 = 10$
+
 **Acknowledgement messages:**
 Same as election
 
