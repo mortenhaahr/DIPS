@@ -45,8 +45,8 @@
     }
     \item Distributed systems allow for horizontal scaling. However, we may need a coordinator for the nodes to cooperate properly.
     \note[item]{
-      A leader role often includes being the organizer of a system.\\
-      This could be in regards to faul tolerance. E.g. the first phase in RAFT is to select a leader.
+      A leader's role often includes being the organizer of a system.\\
+      This could be in regards to fault tolerance. E.g. the first phase of RAFT is to select a leader.
     }
   \end{itemize}
 \end{frame}
@@ -62,7 +62,7 @@
   \end{itemize}
   The tradeoff is that we introduce consistency problems.
   \note{
-    When talking about these things compare it to a centralized system.
+    When talking about these things compare them to a centralized system.
   }
 \end{frame}
 
@@ -110,7 +110,7 @@
 \note{It should be clear now that is very application specific which type of system to implement. Example:
 \begin{itemize}
   \item Facebook likes on a post. It might not be that important whether the user sees 350 or 351 likes on a post. AP is probably fine.
-  \item Banking systems. It is very important that a user's bank account is consistent among the servers. This can either be a CA or CP system. Probably CP since otherwise their entire "Netbank" will be down for writes in case of a network partition. Then it is better to provide some degree of service (while it may be slower) over no service.
+  \item Banking systems. A user's bank account must be consistent among the servers. This can either be a CA or CP system. Probably CP since otherwise, their entire "Netbank" will be down for writes in case of a network partition. Then it is better to provide some degree of service (while it may be slower) over no service.
 \end{itemize}}
 
 \begin{frame}
@@ -119,7 +119,7 @@
   An update is \textbf{immediately} propagated to all other nodes. If two updates happen concurrently, the updates must be processed in the \textbf{same order} at all nodes.\\
   Strong consistency guarantees that the system is in a \textbf{consistent state} when a transaction has finished and before the next transaction can be handled.
   \end{alertblock}
-  \note[item]{So with strong consistency we have this strong guarantee that our data is consistent among the different nodes at any given time. An update is not comitted fully until it has been propagated to all nodes. This also provides a reading guarantee that no matter which node we read from it will be in a consistent state.}
+  \note[item]{So with strong consistency we have this strong guarantee that our data is consistent among the different nodes at any given time. An update is not committed fully until it has been propagated to all nodes. This also provides a reading guarantee that no matter which node we read from it will be in a consistent state.}
   \note[item]{The downside is obviously latency. If we need to send messages to each node whenever we make a change, the system becomes more unresponsive to the user. We talk more about this later.}
 \end{frame}
 
@@ -175,7 +175,7 @@
 
 \begin{frame}
   \frametitle{Bully Election - the simple one}
-  Algorithm explained\note[item]{Algorithm: Election starts by pinging nodes with higher IDs to see if they are alive. If they receive a response they lost the election. Pinged nodes must start their own election. Eventually one does not get a response and is elected leader.}
+  Algorithm explained\note[item]{Algorithm: Election starts by pinging nodes with higher IDs to see if they are alive. If they receive a response they lost the election. Pinged nodes must start their own election. Eventually, one does not get a response and is elected leader.}
 
   Assumptions:
   \begin{itemize}
@@ -201,8 +201,8 @@
   \frametitle{LeLann-Chang-Roberts - the efficient one}
   Algorithm explained
   \note[item]{
-    As seen from the assumptions the LeLann-Chang-Roberts algorithm require the nodes to be arranged in a ring structure.\\
-    A node starts an election by sending a vector containing its ID to the neighbor. The neighbor appends its ID to the vector and forwards it. This continues until the vector reaches the initiator. The initiator then retransmits the vector but as a Coordinator message to annouce the ID of the leader. The nodes can also see the entire topology based on this and perhaps take note of its N most neighbors for better error handling. Once the coordinator reaches the initiator the election is done.
+    As seen from the assumptions the LeLann-Chang-Roberts algorithm requires the nodes to be arranged in a ring structure.\\
+    A node starts an election by sending a vector containing its ID to the neighbor. The neighbor appends its ID to the vector and forwards it. This continues until the vector reaches the initiator. The initiator then retransmits the vector but as a Coordinator message to announce the ID of the leader. The nodes can also see the entire topology based on this and perhaps take note of its N most neighbors for better error handling. Once the coordinator reaches the initiator the election is done.
   }
 
   Assumptions:
@@ -259,9 +259,9 @@
   \end{figure}
   \note{Since everything is happening asynchronously it is quite difficult to describe since their are many different sequences it may follow. Here we assume that every phase occurs simultaneously.
   
-  Description of figures. Text on right describes nodes that were alive at the start of the phase. Green nodes survive for next phase. White ones are dead after the phase.
+  Description of figures. The text on right describes nodes that were alive at the start of the phase. Green nodes survive for the next phase. White ones are dead after the phase.
   
-  In the first phase every node starts its own election.
+  In the first phase, every node starts its own election.
   }
 
 \end{frame}
