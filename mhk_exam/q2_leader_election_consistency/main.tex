@@ -10,7 +10,7 @@
 
 \usepackage{xspace}
 \usepackage{../theme_style}
-\setbeameroption{show notes}
+\setbeameroption{show notes on second screen}
 
 \title[Leader Election and Consistency]{Exam question two - Leader Election and Consistency}
 \subtitle{Distributed and Pervasive Systems}
@@ -54,7 +54,7 @@
 \section{Consistency}
 \begin{frame}
   \frametitle{Replication}
-  Replicate data among nodes to ensure:
+  Reasons to replicate data:
   \begin{itemize}
     \item Reliability
     \item Load balancing
@@ -62,7 +62,10 @@
   \end{itemize}
   The tradeoff is that we introduce consistency problems.
   \note{
-    When talking about these things compare them to a centralized system.
+    When talking about these things compare them to a centralized system.\\
+    Reliability: If we have a replica of the system it might be possible for the system to continue working, even if one of the nodes crash.\\
+    Load balancing: If we have replicated systems we can divide the workload of the system between replicated nodes. \\
+    Geo scaling: We can place replicas of the overall system close to the user's locations. \\
   }
 \end{frame}
 
@@ -111,6 +114,8 @@
 \begin{itemize}
   \item Facebook likes on a post. It might not be that important whether the user sees 350 or 351 likes on a post. AP is probably fine.
   \item Banking systems. A user's bank account must be consistent among the servers. This can either be a CA or CP system. Probably CP since otherwise, their entire "Netbank" will be down for writes in case of a network partition. Then it is better to provide some degree of service (while it may be slower) over no service.
+  \item Optional: A CA system doesn't distinguish between node failures and network failures. So when a failure occurs it must stop accepting all writes since it cannot know if it is a network partition. It is still somewhat available though as it can process read requests.
+  \item Optional: A CP system allows the majority partition to continue operating normally and requires the minority partition to become unavailable.
 \end{itemize}}
 
 \begin{frame}
@@ -130,7 +135,7 @@
   \end{alertblock}
   \note[item]{DNS servers are probably the most known example of an eventually consistent system. DNS promises to be consistent after a window of 48 hours. When I've worked with it previously my changes have been reflected after maximum a couple of hours but that might just be locally.}
   \begin{alertblock}{Weak consistency\footnote{The definition is paraphrased from: \cite{pedersenConsistencyDistributedPervasive2022}}}
-    Weak consistency models guarantee eventual consistency. During the \textbf{inconsistency window}, reads are not guaranteed to reflect the global state but only the most locally (across a sbuset of nodes) state.
+    Weak consistency models guarantee eventual consistency. During the \textbf{inconsistency window}, reads are not guaranteed to reflect the global state but only the most locally (across a subset of nodes) state.
   \end{alertblock}
 
 \end{frame}

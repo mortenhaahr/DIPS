@@ -10,7 +10,7 @@
 
 \usepackage{xspace}
 \usepackage{../theme_style}
-\setbeameroption{show notes}
+% \setbeameroption{show notes on second screen}
 
 \title[Context Awareness]{Exam question six - Context Awareness}
 \subtitle{Distributed and Pervasive Systems}
@@ -66,7 +66,7 @@
     \footnotesize
     When talking about pervasive systems it is inevitable to run across the ''smart stuff''. We generally talk about three categories of smart x:\\
     Smart device: An electronic device that can connect, share and interact with a pervasive system. I.e. other smart devices. \\
-    Smart environment: An environment that can acquire and apply knowledge, through smart devices, about the environment and its users to improve their experience.\\
+    Smart environment: An environment that can acquire and apply knowledge about the environment and its users to improve their experience.\\
     Smart space: A smart space is a smaller area of a smart environment.\\
     A smart environment could be a hospital where the ventilation is automated, bed occupancy is tracked, and the nearest doctor is automatically called for if an emergency happens if he is not busy. A smart space in the hospital could be a specific room where the screen automatically opens the patients' journal when the nurse enters.\\
     Smart interaction: Dynamic organization and interaction between components to achieve shared goals. Can be internal or driven by external events.
@@ -176,13 +176,19 @@
   \footnotesize
   ... and maybe standardize more things.
   \note{
-    % \footnotesize
     We are getting there. Especially in the medical sector, there is a lot of research going on. But I think one of the big challenges is that the companies are not opening up their services enough to allow for intelligent environments to be truly smart. And why would they? It's probably a lot more profitable to lock the buyers into your ecosystem so that the hospital has to keep reinvesting in your equipment instead of the competitors. So I think to truly get intelligent environments the users need to start making requirements for the vendors to make their devices compatible with each other. This could be done by standardizing what different devices provide, similar to what the Zigbee2MQTT library does.\\
     We are seeing increasing compatibility with the apps like ''Home Assistant'', ''Google Home'', etc. where you can register your device in there to control them. But then we are mainly still limited to controlling them through apps and not smart interactions.
   }
 
 \end{frame}
 
+\begin{frame}
+  \frametitle{Project}
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figs/deployment_diagram.pdf}
+    \caption{Deployment diagram of our project.}
+  \end{figure}
+\end{frame}
 
 \section{References}
 \begin{frame}[allowframebreaks]{References}

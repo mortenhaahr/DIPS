@@ -10,9 +10,9 @@
 
 \usepackage{xspace}
 \usepackage{../theme_style}
-\setbeameroption{show notes}
+% \setbeameroption{show notes on second screen}
 
-\title[Pervasive Computing]{Exam question two - Pervasive Computing}
+\title[Pervasive Computing]{Exam question five - Pervasive Computing}
 \subtitle{Distributed and Pervasive Systems}
 \date{June 03, 2022}
 \author[M.H. Kristensen]{Morten Haahr Kristensen}
@@ -45,7 +45,7 @@
     Pervasive system is the architecture.\\
     Pervasive computing is the technique (how it is done).
 
-    Calm experience: 
+    Calm technology: A technology that is designed to mainly occur in the user's periphery. The information only presents itself when needed and otherwise stays calmly on the user's periphery. 
     }
 \end{frame}
 
@@ -66,7 +66,7 @@
     \footnotesize
     When talking about pervasive systems it is inevitable to run across the ''smart stuff''. We generally talk about three categories of smart x:\\
     Smart device: An electronic device that can connect, share and interact with a pervasive system. I.e. other smart devices. \\
-    Smart environment: An environment that can acquire and apply knowledge, through smart devices, about the environment and its users to improve their experience.\\
+    Smart environment: An environment that can acquire and apply knowledge about the environment and its users to improve their experience.\\
     Smart space: A smart space is a smaller area of a smart environment.\\
     A smart environment could be a hospital where the ventilation is automated, bed occupancy is tracked, and the nearest doctor is automatically called for if an emergency happens if he is not busy. A smart space in the hospital could be a specific room where the screen automatically opens the patients' journal when the nurse enters.\\
     Smart interaction: Dynamic organization and interaction between components to achieve shared goals. Can be internal or driven by external events.
@@ -97,6 +97,10 @@
     \item Smart devices
     \item Smart spaces
   \end{enumerate}
+  \note{
+    Implicit HCI: When a user makes an action that is not explicitly aimed at a computer system but where the system understands it as an input. Could be opening a window or walking into a room.\\
+    Context awareness: If we want our systems to truly be calm and help our users they must be aware of the current context. Could be whether a room is occupied or which mood the user is in.
+  }
 
 \end{frame}
 
@@ -199,11 +203,19 @@
     \item Limited user interfaces - form factor and power
   \end{itemize}
 
-  Can perhaps be replaced by: Ambient sensors, calm interaction devices and collective technologies.
+  Can perhaps be replaced by: Ambient sensors, calm/novel interaction devices and collective technologies.
   \note{
     Typically a pervasive system can be interfaced through an app on one of our smart devices. \\
     Replaced: Ambient sensors could be PIR sensors or camera sensors. Calm interaction devices could be screens or audial devices. Collective technologies could be cloud computing - if the computations otherwise took place on the phone.
   }
+\end{frame}
+
+\begin{frame}
+  \frametitle{Project}
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figs/deployment_diagram.pdf}
+    \caption{Deployment diagram of our project.}
+  \end{figure}
 \end{frame}
 
 \section{References}

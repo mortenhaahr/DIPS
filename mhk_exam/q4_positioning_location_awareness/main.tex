@@ -10,7 +10,7 @@
 
 \usepackage{xspace}
 \usepackage{../theme_style}
-\setbeameroption{show notes}
+\setbeameroption{show notes on second screen}
 
 \title[Positioning and location awareness]{Exam question 4 - Positioning and location awareness}
 \subtitle{Distributed and Pervasive Systems}
@@ -33,11 +33,14 @@
 
 \section{Motivation}
 
-\begin{frame}
-  \frametitle{Motivation}
-
-  
-
+\begin{frame}{Motivation}
+  \begin{alertblock}{Distributed System definition \cite{vansteenDistributedSystems2018}}
+    A distributed system is a collection of autonomous computing elements that \textbf{appears} to its users as \textbf{a single coherent system}.
+  \end{alertblock}
+  \begin{itemize}
+    \item Position and location is often central in distributed and pervasive systems.
+    \item Principles learned in position and location can be applied in other course-relevant areas.
+  \end{itemize}
 \end{frame}
 
 \section{Location and Positioning}
@@ -161,37 +164,40 @@
   \end{figure}
   \note{
     Based on the angles to the beacons, we draw all the circles and calculate their parameters.\\
-    We can see e.g. circle 31 $\mathcal{C_{31}}$ that is defined as the circle from beacon 3 to beacon 1. It has the angle $\phi_{31}$, center and radius. \\ 
+    We can see e.g. circle 31 $\mathcal{C}_{31}$ that is defined as the circle from beacon 3 to beacon 1. It has the angle $\phi_{31}$, center and radius. \\ 
     All the angles are measured with reference to the robot's heading orientation which is $\theta_R$.\\
     The article doesn't actually mention this but I assume this is known natively through the robot's sensor.
   }
 \end{frame}
 
 \begin{frame}
-  \frametitle{ToTal - Algorithm}
-
+  \frametitle{ToTal - Algorithm I}
   \begin{figure}
-    \centering
-    \subfloat{\includegraphics[width=0.45\textwidth]{figs/total_algorithm_1.png}}\qquad
-    \subfloat{\includegraphics[width=0.45\textwidth]{figs/total_algorithm_2.png}}
-    \caption{ToTal - Algorithm \cite{pierlotNewThreeObject2014}}
+    \includegraphics[width=0.7\textwidth]{figs/total_algorithm_1.png}
+  \end{figure}
+  \note{
+    The algorithm uses the beacon positions relative to one of the beacons. (In the example beacon 2 is chosen). In the figure, they chose beacon 2 as the origin.\\
+    Step one: Calculate the relative positions of the beacon coordinates.\\
+    Step two: Intermediate results used in step 3. The last cotangent is calculated by referring to the other two cotangents as this is more computationally efficient.\\
+  }
+\end{frame}
+
+\begin{frame}
+  \frametitle{ToTal - Algorithm II}
+  \begin{figure}
+    \includegraphics[width=0.7\textwidth]{figs/total_algorithm_2.png}
   \end{figure}
   \begin{equation*}
     k_{ij} = \frac{x_{ij}^2 + y_{ij}^2 - R_{ij}^2}{2}
   \end{equation*}
+  \note{\footnotesize
+    Step three: We calculate the coordinates of the circle center for each circle.\\
+    Step four: The k-values are intermediate values that are used for calculating the power lines. They relate to the coordinates of the circle and its radius as seen in the formula. In this algorithm, it is only necessary to calculate a single one of them.\\
+    Step five: The D-value is also used for the power lines where D stands for the denominator. During this step, we also need to check if it is zero to avoid dividing by zero in the next step. They write ''return an error'' but in reality, they have made a special case for handling these scenarios.\\
+    My intuition tells me that this scenario might be entirely avoidable by the placement of the beacons. $D = 0$ when the circles are collinear which, to my understanding, means that they are in line. By having the beacons placed in a triangular shape this should not be possible. However, I would have to experiment more with this idea to be certain. It also makes sense that this is considered as it is a general algorithm.\\
+    Step six: In the final step we calculate the robot's position.
+  }
 \end{frame}
-\note{\footnotesize
-    The algorithm uses the beacon positions relative to one of the beacons. (In the example beacon 2 is chosen). In the figure, they chose beacon 2 as the origin.\\
-    Step one: Calculate the relative positions of the beacon coordinates.\\
-    Step two: Intemediate results used in step 3. The last cotangent is calculated by referring to the other two contangents as this is more computationally efficient.\\
-    Step three: We calculate the coordinates of the center for each circle.\\
-    Step four: The k-values are intermediate values that are used for calculating the power lines. They relate to the coordinates of the circle and its radius as seen in the formula. In this algorithm, it is only necessary to calculate a single one of them, as seen in step 4.\\
-}
-\note{\footnotesize
-Step five: The D-value is also used for the power lines where D stands for the denominator. During this step, we also need to check if it is zero to avoid dividing by zero in the next step. They write ''return an error'' but in reality, they have made a special case for handling these scenarios.\\
-My intuition tells me that this scenario might be entirely avoidable by the placement of the beacons. $D = 0$ when the circles are collinear which, to my understanding, means that they are in line. By having the beacons placed in a triangular shape this should not be possible. However, I would have to experiment more with this idea to be certain. It also makes sense that this is considered as it is a general algorithm.\\
-Step six: In the final step we calculate the robot's position.
-}
 
 \section{Relative positioning}
 
@@ -303,7 +309,7 @@ Uses recursion:
 \end{frame}
 
 \begin{frame}
-  \frametitle{Kalman filter - Estimation model}
+  \frametitle{Kalman filter - Prediction model}
   \begin{equation}
     \mathbf{x}_t = \mathbf{F}_t\cdot \mathbf{x}_{t-1} + \mathbf{B}_t\cdot \mathbf{u}_t + \mathbf{w}_t
   \end{equation}
